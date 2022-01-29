@@ -1,0 +1,226 @@
+# Layout, themes, HTML
+
+## Single page layouts
+
+### Exercises
+
+#### Ex 1
+
+using `sidebarLayout`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(textInput('t1','Please enter your name:')),
+    mainPanel(textOutput('to1'))
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+using `fluidRow`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  fluidRow(
+    column(4, textInput('t1', 'Please enter your name:')),
+    column(8, textOutput('to1'))
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 2
+
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Central limit theorem"),
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("m", "Number of samples:", 2, min = 1, max = 100)
+    ),
+    mainPanel(
+      plotOutput("hist")
+    ),
+    position = 'right'
+  )
+)
+server <- function(input, output, session) {
+  output$hist <- renderPlot({
+    means <- replicate(1e4, mean(runif(input$m)))
+    hist(means, breaks = 20)
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+
+
+
+#### Ex 3
+
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  fluidRow(
+    column(6, plotOutput('p1')),
+    column(6, plotOutput('p2'))
+  ),
+  fluidRow(
+    textInput('t1', 'Please enter the title:', width = '100%')
+  )
+)
+server <- function(input, output, session) {
+  output$p1 <- renderPlot({
+    plot(cars)
+  })
+
+  output$p2 <- renderPlot({
+    plot(mtcars)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Multi-page layouts
+
+
+### `tabsetPanel`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      textOutput("panel")
+    ),
+    mainPanel(
+      tabsetPanel(
+        id = "tabset",
+        tabPanel("panel 1", "one"),
+        tabPanel("panel 2", "two"),
+        tabPanel("panel 3", "three")
+      )
+    )
+  )
+)
+server <- function(input, output, session) {
+  output$panel <- renderText({
+    paste("Current panel: ", input$tabset)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+### `navlistPanel`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  navlistPanel(
+    id = "tabset",
+    "test Heading 1",
+    tabPanel("panel 1", "Panel one contents"),
+    "test Heading 2",
+    tabPanel("panel 2", "Panel two contents"),
+    tabPanel("panel 3", "Panel three contents")
+  ),
+  textOutput('t1')
+)
+
+server <- function(input, output, session) {
+  output$t1 <- renderText({
+    paste("Current panel: ", input$tabset)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### `navbarPage`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- navbarPage(
+  "Page title",  
+  id = 'nav1',
+  tabPanel("panel 1", "one"),
+  tabPanel("panel 2", "two"),
+  tabPanel("panel 3", "three"),
+  navbarMenu("subpanels", 
+    tabPanel("panel 4a", "four-a"),
+    tabPanel("panel 4b", "four-b"),
+    tabPanel("panel 4c", "four-c")
+  ),
+  textOutput('t1')
+)
+
+server <- function(input, output, session) {
+  output$t1 <- renderText({
+    paste("Current panel: ", input$nav1)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Bootstrap
+
+Some more reference
+
+[Awesome Shiny](https://github.com/nanxstats/awesome-shiny-extensions)
+
+## Themes
+
+```{r}
+library(shiny)
+library(bslib)
+
+ui <- fluidPage(
+  theme = bslib::bs_theme(bootswatch = "darkly"),
+  sidebarLayout(
+    sidebarPanel(
+      textInput("txt", "Text input:", "text here"),
+      sliderInput("slider", "Slider input:", 1, 100, 30)
+    ),
+    mainPanel(
+      h1(paste0("Theme: darkly")),
+      h2("Header 2"),
+      p("Some text")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+

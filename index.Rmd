@@ -1,0 +1,25 @@
+--- 
+title: "Mastering Shiny with Examples"
+author: "Jie Wang"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib, packages.bib]
+# url: your book url like https://github.com/ifendo
+# cover-image: path to the social sharing image like images/cover.jpg
+description: |
+  I extracted and captured the executable code examples of `Mastering Shiny` book for my personal practice and testing.
+link-citations: yes
+github-repo: ifendo/
+---
+
+# About {.unnumbered}
+
+This is the book I used to extract and capture the executable code examples of `Mastering Shiny` book for my personal practice and testing.
+
+## Mastering-Shiny by Hadley Wickham {.unnumbered}
+
+[Mastering-Shiny](https://mastering-shiny.org/index.html)
+
+
+

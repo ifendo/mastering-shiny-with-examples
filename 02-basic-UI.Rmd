@@ -1,0 +1,265 @@
+# Basic UI
+
+## Shiny extensions
+
++ shinyWidgets
++ colorpicker
++ sorttable
++ <https://github.com/nanxstats/awesome-shiny-extensions>
+
+## Inputs
+
+### Common structure
+
+All input functions have the same first argument: `inputId`.
+
+The inputId has two constraints:
+
++ It must be a simple string that contains only letters, numbers, and underscores (no spaces, dashes, periods, or other special characters allowed!). Name it like you would name a variable in R.
+
++ It must be unique. If it’s not unique, you’ll have no way to refer to this control in your server function!
+
+### Input examples
+
+```{r, eval=FALSE}
+library(shiny)
+
+animals <- c("dog", "cat", "mouse", "bird", "other", "I hate animals")
+
+ui <- fluidPage(
+  # free text
+  textInput("name", "What's your name?"),
+  passwordInput("password", "What's your password?"),
+  textAreaInput("story", "Tell me about yourself", rows = 3),
+
+  # numeric inputs
+  numericInput("num", "Number one", value = 0, min = 0, max = 100),
+  sliderInput("num2", "Number two", value = 50, min = 0, max = 100),
+  sliderInput("rng", "Range", value = c(10, 20), min = 0, max = 100),
+
+  # date inputs
+  dateInput("dob", "When were you born?"),
+  dateRangeInput("holiday", "When do you want to go on vacation next?"),
+
+  # limited choices
+  selectInput("state", "What's your favourite state?", state.name),
+  radioButtons("animal", "What's your favourite animal?", animals),
+  # we can even use Icon
+  radioButtons("rb", "Choose one:",
+    choiceNames = list(
+      icon("angry"),
+      icon("smile"),
+      icon("sad-tear")
+    ),
+    choiceValues = list("angry", "happy", "sad")
+  ),
+
+  # select input
+  selectInput(
+    "state", "What's your favourite state?", state.name,
+    multiple = TRUE
+  ),
+
+  # file upload
+  fileInput("upload", NULL),
+
+  # action button
+  actionButton("click", "Click me!", class = "btn-danger"),
+  actionButton("drink", "Drink me!", icon = icon("cocktail"), class = "btn-lg btn-success")
+
+
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+### Exercises
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  # ex 1
+  textInput('t1', label = NULL, placeholder = 'Your name'),
+
+  # ex 2
+  sliderInput(
+    's1', 
+    label = 'When should we deliver?', 
+    min = as.Date('2020-09-16'), 
+    max = as.Date('2020-09-23'), 
+    value = as.Date('2020-09-17')
+  ),
+
+  # ex 3
+  sliderInput(
+    's2',
+    'Ex 3',
+    min = 0,
+    max = 100,
+    value = 50,
+    step = 5,
+    animate = TRUE
+  ),
+
+  # ex 4
+  selectInput(
+    'se1',
+    'Select an option',
+    choices = list(
+      group1 = list('Option 1', 'Option 2'),
+      group2 = list('Option 3', 'Option 4', 'Option 5')
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  
+}
+
+shinyApp(ui, server)
+```
+
+## Outputs
+
+Outputs in the UI **create placeholders** that are later filled by the server function.
+
+### Text output
+
+```{r eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textOutput("text"),
+  verbatimTextOutput("code")
+)
+server <- function(input, output, session) {
+  output$text <- renderText({ 
+    "Hello friend!" 
+  })
+  output$code <- renderPrint({ 
+    summary(1:10) 
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### Table output
+
+```{r eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  tableOutput("static"),
+  dataTableOutput("dynamic")
+)
+server <- function(input, output, session) {
+  output$static <- renderTable(head(mtcars))
+  output$dynamic <- renderDataTable(mtcars, options = list(pageLength = 5))
+}
+
+shinyApp(ui, server)
+```
+
+### Plot output
+
+```{r eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  plotOutput("plot", width = "400px")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot(plot(1:5), res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+Plots are special because they are outputs that **can also act as inputs**. 
+
+plotOutput() has a number of arguments like `click`, `dblclick`, and `hover`. If you pass these a string, like click = "plot_click", they’ll create a reactive input (input$plot_click) that you can use to handle user interaction on the plot.
+
+### Exercises
+
+#### Ex 1
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textOutput('t1'),
+  verbatimTextOutput('v1'),
+  verbatimTextOutput('v2'),
+  verbatimTextOutput('v3')
+)
+
+server <- function(input, output, session) {
+  output$t1 <- renderText("Good morning!")
+  output$v1 <- renderPrint(str(lm(mpg ~ wt, data = mtcars)))
+  output$v2 <- renderPrint(summary(mtcars))
+  output$v3 <- renderPrint(t.test(1:5, 2:6))
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 2
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  plotOutput("plot", width = "400px")
+)
+server <- function(input, output, session) {
+  output$plot <- renderPlot(plot(1:5), 
+    width = 700, 
+    height = 300, 
+    res = 96, 
+    alt = 'a scatterplot of five random numbers')
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 3
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  dataTableOutput("table")
+)
+
+server <- function(input, output, session) {
+  output$table <- renderDataTable(mtcars, options = list(dom='t'))
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 4
+
+```{r, eval=FALSE}
+library(shiny)
+library(reactable)
+
+ui <- fluidPage(
+  reactableOutput("table")
+)
+
+server <- function(input, output) {
+  output$table <- renderReactable({
+    reactable(mtcars)
+  })
+}
+
+shinyApp(ui, server)
+```
+

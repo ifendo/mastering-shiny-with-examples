@@ -1,0 +1,96 @@
+# Workflow
+
+Improving workflow is a good place to invest time because it tends to pay great dividends in the long run.
+
+## Case Study
+
+### app showing missing values
+
+```{r, eval=FALSE}
+library(readr)
+library(shiny)
+
+sales <- readr::read_csv("assets/sales_data_sample.csv")
+sales <- sales[c(
+  "TERRITORY", "ORDERDATE", "ORDERNUMBER", "PRODUCTCODE",
+  "QUANTITYORDERED", "PRICEEACH"
+)]
+
+ui <- fluidPage(
+  selectInput("territory", "territory", choices = unique(sales$TERRITORY)),
+  tableOutput("selected")
+)
+server <- function(input, output, session) {
+  selected <- reactive(sales[sales$TERRITORY == input$territory, ])
+  output$selected <- renderTable(head(selected(), 10))
+}
+
+shinyApp(ui, server)
+```
+
+### app after debugging
+
+```{r, eval=FALSE}
+library(readr)
+library(shiny)
+
+sales <- readr::read_csv("assets/sales_data_sample.csv")
+sales <- sales[c(
+  "TERRITORY", "ORDERDATE", "ORDERNUMBER", "PRODUCTCODE",
+  "QUANTITYORDERED", "PRICEEACH"
+)]
+
+ui <- fluidPage(
+  selectInput("territory", "territory", choices = unique(sales$TERRITORY)),
+  tableOutput("selected")
+)
+
+server <- function(input, output, session) {
+  selected <- reactive({
+    if (input$territory == "NA") {
+      subset(sales, is.na(TERRITORY))
+    } else {
+      subset(sales, TERRITORY == input$territory)
+    }
+  })
+  output$selected <- renderTable(head(selected(), 10))
+}
+
+shinyApp(ui, server)
+```
+
+> Shiny had silently converted an NA to an "NA". [GitHub issue](https://github.com/rstudio/shiny/issues/2884)
+
+### using `glue` for debugging
+
+```{r, eval=FALSE}
+library(shiny)
+library(glue)
+
+ui <- fluidPage(
+  sliderInput("x", "x", value = 1, min = 0, max = 10),
+  sliderInput("y", "y", value = 2, min = 0, max = 10),
+  sliderInput("z", "z", value = 3, min = 0, max = 10),
+  textOutput("total")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$x, {
+    message(glue("Updating y from {input$y} to {input$x * 2}"))
+    updateSliderInput(session, "y", value = input$x * 2)
+  })
+  
+  total <- reactive({
+    total <- input$x + input$y + input$z
+    message(glue("New total is {total}"))
+    total
+  })
+  
+  output$total <- renderText({
+    total()
+  })
+}
+
+shinyApp(ui, server)
+```
+
