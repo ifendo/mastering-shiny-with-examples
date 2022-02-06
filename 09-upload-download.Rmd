@@ -1,0 +1,455 @@
+# Uploads and downloads
+
+## Upload
+
+```{r, eval=FALSE}
+options(shiny.maxRequestSize = 100 * 1024^2) # to allow up to 100 MB file upload
+
+library(shiny)
+
+ui <- fluidPage(
+  fileInput("upload", NULL, buttonLabel = "Upload...", multiple = TRUE),
+  tableOutput("files")
+)
+
+server <- function(input, output, session) {
+  output$files <- renderTable(input$upload)
+}
+
+shinyApp(ui, server)
+```
+
+### Uploading data
+
+```{r, eval=FALSE}
+library(shiny)
+library(vroom)
+
+ui <- fluidPage(
+  fileInput("upload", NULL, accept = c(".csv", ".tsv")),
+  numericInput("n", "Rows", value = 5, min = 1, step = 1),
+  tableOutput("head")
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    req(input$upload)
+    
+    ext <- tools::file_ext(input$upload$name)
+    switch(ext,
+      csv = vroom::vroom(input$upload$datapath, delim = ","),
+      tsv = vroom::vroom(input$upload$datapath, delim = "\t"),
+      validate("Invalid file; Please upload a .csv or .tsv file")
+    )
+  })
+  
+  output$head <- renderTable({
+    head(data(), input$n)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+## Download
+
+### Download `tsv`
+
+```{r, eval=FALSE}
+library(shiny)
+library(vroom)
+
+ui <- fluidPage(
+  selectInput("dataset", "Pick a dataset", ls("package:datasets")),
+  tableOutput("preview"),
+  downloadButton("download", "Download .tsv")
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    out <- get(input$dataset, "package:datasets")
+    if (!is.data.frame(out)) {
+      validate(paste0("'", input$dataset, "' is not a data frame"))
+    }
+    out
+  })
+  
+  output$preview <- renderTable({
+    head(data())
+  })
+    
+  output$download <- downloadHandler(
+    filename = function() {
+      paste0(input$dataset, ".tsv")
+    },
+    content = function(file) {
+      vroom::vroom_write(data(), file)
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+### Download report
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("n", "Number of points", 1, 100, 50),
+  downloadButton("report", "Generate report")
+)
+
+server <- function(input, output, session) {
+  output$report <- downloadHandler(
+    filename = "report.html",
+    content = function(file) {
+      params <- list(n = input$n)
+      
+      id <- showNotification(
+        "Rendering report...", 
+        duration = NULL, 
+        closeButton = FALSE
+      )
+      on.exit(removeNotification(id), add = TRUE)
+
+      rmarkdown::render("report.Rmd", 
+        output_file = file,
+        params = params,
+        envir = new.env(parent = globalenv())
+      )
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+### better version
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("n", "Number of points", 1, 100, 50),
+  downloadButton("report", "Generate report")
+)
+
+report_path <- tempfile(fileext = ".Rmd")
+file.copy("report.Rmd", report_path, overwrite = TRUE)
+
+render_report <- function(input, output, params) {
+  rmarkdown::render(input,
+    output_file = output,
+    params = params,
+    envir = new.env(parent = globalenv())
+  )
+}
+
+server <- function(input, output) {
+  output$report <- downloadHandler(
+    filename = "report.html",
+    content = function(file) {
+      params <- list(n = input$slider)
+      callr::r(
+        render_report,
+        list(input = report_path, output = file, params = params)
+      )
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+
+## Case study
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui_upload <- sidebarLayout(
+  sidebarPanel(
+    fileInput("file", "Data", buttonLabel = "Upload..."),
+    textInput("delim", "Delimiter (leave blank to guess)", ""),
+    numericInput("skip", "Rows to skip", 0, min = 0),
+    numericInput("rows", "Rows to preview", 10, min = 1)
+  ),
+  mainPanel(
+    h3("Raw data"),
+    tableOutput("preview1")
+  )
+)
+
+ui_clean <- sidebarLayout(
+  sidebarPanel(
+    checkboxInput("snake", "Rename columns to snake case?"),
+    checkboxInput("constant", "Remove constant columns?"),
+    checkboxInput("empty", "Remove empty cols?")
+  ),
+  mainPanel(
+    h3("Cleaner data"),
+    tableOutput("preview2")
+  )
+)
+
+ui_download <- fluidRow(
+  column(width = 12, downloadButton("download", class = "btn-block"))
+)
+
+ui <- fluidPage(
+  ui_upload,
+  ui_clean,
+  ui_download
+)
+
+server <- function(input, output, session) {
+  # Upload ---------------------------------------------------------
+  raw <- reactive({
+    req(input$file)
+    delim <- if (input$delim == "") NULL else input$delim
+    vroom::vroom(input$file$datapath, delim = delim, skip = input$skip)
+  })
+  output$preview1 <- renderTable(head(raw(), input$rows))
+  
+  # Clean ----------------------------------------------------------
+  tidied <- reactive({
+    out <- raw()
+    if (input$snake) {
+      names(out) <- janitor::make_clean_names(names(out))
+    }
+    if (input$empty) {
+      out <- janitor::remove_empty(out, "cols")
+    }
+    if (input$constant) {
+      out <- janitor::remove_constant(out)
+    }
+    
+    out
+  })
+  output$preview2 <- renderTable(head(tidied(), input$rows))
+  
+  # Download -------------------------------------------------------
+  output$download <- downloadHandler(
+    filename = function() {
+      paste0(tools::file_path_sans_ext(input$file$name), ".tsv")
+    },
+    content = function(file) {
+      vroom::vroom_write(tidied(), file)
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+## Exercises
+
+### Ex 1
+
+```{r, eval=FALSE}
+
+library(ambient)
+library(shiny)
+
+ui <- fluidPage(
+  downloadButton('d1', 'Download the PNG')
+)
+
+server <- function(input, output, session) {
+  # Download -------------------------------------------------------
+  output$d1 <- downloadHandler(
+    filename = function() {
+      paste0("worley_noise", ".png")
+    },
+    content = function(file) {
+      grid <- long_grid(seq(1, 10, length.out = 1000), seq(1, 10, length.out = 1000))
+      grid$noise <- gen_worley(grid$x, grid$y, value = 'distance')
+      png(file)
+      plot(grid, noise)
+      dev.off()
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+### Ex 2
+
+```{r, eval=FALSE}
+
+library(shiny)
+
+ui <- fluidPage(
+  fileInput('f1', 'Upload a CSV file', accept = '.csv'),
+  selectInput('t1', 'Select a variable to test', choices = NULL),
+  verbatimTextOutput('ttest')
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    vroom::vroom(input$f1$datapath, delim = ",")
+  })
+    
+  observeEvent(input$f1, {
+    numeric_vars_l <- sapply(data(), is.numeric)
+    numeric_vars <- names(data())[numeric_vars_l]
+    updateSelectInput(inputId = 't1', choices = numeric_vars)
+  })
+  
+  output$ttest <- renderPrint({
+    req(input$t1)
+    t.test(data()[[input$t1]])
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### Ex 3
+
+```{r, eval=FALSE}
+
+library(shiny)
+
+ui <- fluidPage(
+  fileInput('f1', 'Upload a CSV file', accept = '.csv'),
+  selectInput('t1', 'Select a variable to draw a histogram', choices = NULL),
+  plotOutput('h1'),
+  selectInput('t2', 'Download format', choices = c('PNG','PDF','SVG')),
+  downloadButton('d1', 'Download the histogram')
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    vroom::vroom(input$f1$datapath, delim = ",")
+  })
+    
+  observeEvent(input$f1, {
+    numeric_vars_l <- sapply(data(), is.numeric)
+    numeric_vars <- names(data())[numeric_vars_l]
+    updateSelectInput(inputId = 't1', choices = numeric_vars)
+  })
+  
+  output$h1 <- renderPlot({
+    req(input$t1)
+    hist(data()[[input$t1]])
+  })
+  
+  output$d1 <- downloadHandler(
+    filename = function() {
+      paste0(input$t1, ".",input$t2)
+    },
+    content = function(file) {
+        
+      output_format <- function(out) {
+        switch (out,
+            PNG = png,
+            PDF = pdf,
+            SVG = svg
+        )
+      }
+      
+      output_format(input$t2)(file)
+      hist(data()[[input$t1]])
+      dev.off()
+    }
+  )
+}
+
+shinyApp(ui, server)
+```
+
+### Ex 5
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui_upload <- sidebarLayout(
+  sidebarPanel(
+    fileInput("file", "Data", buttonLabel = "Upload..."),
+    textInput("delim", "Delimiter (leave blank to guess)", ""),
+    numericInput("skip", "Rows to skip", 0, min = 0),
+    numericInput("rows", "Rows to preview", 10, min = 1)
+  ),
+  mainPanel(
+    h3("Raw data"),
+    tableOutput("preview1")
+  )
+)
+
+ui_clean <- sidebarLayout(
+  sidebarPanel(
+    checkboxInput("snake", "Rename columns to snake case?"),
+    checkboxInput("constant", "Remove constant columns?"),
+    checkboxInput("empty", "Remove empty cols?")
+  ),
+  mainPanel(
+    h3("Cleaner data"),
+    tableOutput("preview2")
+  )
+)
+
+ui_download <- fluidRow(
+  column(width = 12, downloadButton("download", class = "btn-block"))
+)
+
+ui <- fluidPage(
+  ui_upload,
+  ui_clean,
+  ui_download
+)
+
+server <- function(input, output, session) {
+  # Upload ---------------------------------------------------------
+  raw <- reactive({
+    req(input$file)
+    delim <- if (input$delim == "") NULL else input$delim
+    vroom::vroom(input$file$datapath, delim = delim, skip = input$skip)
+  })
+  output$preview1 <- renderTable(head(raw(), input$rows))
+  
+  # Clean ----------------------------------------------------------
+  tidied1 <- reactive({
+    out <- raw()
+    if (input$snake) {
+      names(out) <- janitor::make_clean_names(names(out))
+    }
+    out
+  })
+
+  tidied2 <- reactive({
+    out <- tidied1()
+    if (input$empty) {
+      out <- janitor::remove_empty(out, "cols")
+    }
+    out
+  })
+
+  tidied3 <- reactive({
+    out <- tidied2()
+    if (input$constant) {
+      out <- janitor::remove_constant(out)
+    }
+    out
+  })
+  output$preview2 <- renderTable(head(tidied3(), input$rows))
+  
+  # Download -------------------------------------------------------
+  output$download <- downloadHandler(
+    filename = function() {
+      paste0(tools::file_path_sans_ext(input$file$name), ".tsv")
+    },
+    content = function(file) {
+      vroom::vroom_write(tidied3(), file)
+    }
+  )
+}
+
+shinyApp(ui, server)
+
+```
+

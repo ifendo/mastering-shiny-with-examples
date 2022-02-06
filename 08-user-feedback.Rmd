@@ -1,0 +1,270 @@
+# User Feedback
+
+## Validation
+
+### Validating input
+
+```{r, eval=FALSE}
+library(shiny)
+library(shinyFeedback)
+
+ui <- fluidPage(
+  shinyFeedback::useShinyFeedback(),
+  numericInput("n", "n", value = 10),
+  textOutput("half")
+)
+
+server <- function(input, output, session) {
+  half <- reactive({
+    even <- input$n %% 2 == 0
+    shinyFeedback::feedbackWarning("n", !even, "Please select an even number")
+    input$n / 2    
+  })
+  
+  output$half <- renderText(half())
+}
+
+shinyApp(ui, server)
+```
+
+### `req`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("language", "Language", choices = c("", "English", "Maori")),
+  textInput("name", "Name"),
+  textOutput("greeting")
+)
+
+server <- function(input, output, session) {
+  greetings <- c(
+    English = "Hello", 
+    Maori = "Kia ora"
+  )
+  output$greeting <- renderText({
+    req(input$language, input$name)
+    paste0(greetings[[input$language]], " ", input$name, "!")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  shinyFeedback::useShinyFeedback(),
+  textInput("dataset", "Dataset name"), 
+  tableOutput("data")
+)
+
+server <- function(input, output, session) {
+  data <- reactive({
+    req(input$dataset)
+    
+    exists <- exists(input$dataset, "package:datasets")
+    shinyFeedback::feedbackDanger("dataset", !exists, "Unknown dataset")
+    req(exists, cancelOutput = TRUE)
+
+    get(input$dataset, "package:datasets")
+  })
+  
+  output$data <- renderTable({
+    head(data())
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### Validate output
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("x", "x", value = 0),
+  selectInput("trans", "transformation", 
+    choices = c("square", "log", "square-root")
+  ),
+  textOutput("out")
+)
+
+server <- function(input, output, session) {
+  output$out <- renderText({
+    if (input$x < 0 && input$trans %in% c("log", "square-root")) {
+      validate("x can not be negative for this transformation")
+    }
+    
+    switch(input$trans,
+      square = input$x ^ 2,
+      "square-root" = sqrt(input$x),
+      log = log(input$x)
+    )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+## Notifications
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("goodnight", "Good night")
+)
+server <- function(input, output, session) {
+  observeEvent(input$goodnight, {
+    showNotification("So long")
+    Sys.sleep(1)
+    showNotification("Farewell")
+    Sys.sleep(1)
+    showNotification("Auf Wiedersehen")
+    Sys.sleep(1)
+    showNotification("Adieu")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
+## Progress bars
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("steps", "How many steps?", 10),
+  actionButton("go", "go"),
+  textOutput("result")
+)
+
+server <- function(input, output, session) {
+  data <- eventReactive(input$go, {
+    withProgress(message = "Computing random number", {
+      for (i in seq_len(input$steps)) {
+        Sys.sleep(0.5)
+        incProgress(1 / input$steps)
+      }
+      runif(1)
+    })
+  })
+  
+  output$result <- renderText(round(data(), 2))
+}
+
+shinyApp(ui, server)
+```
+
+
+### Waiter
+
+```{r, eval=FALSE}
+library(shiny)
+library(waiter)
+
+ui <- fluidPage(
+  waiter::use_waitress(),
+  numericInput("steps", "How many steps?", 10),
+  actionButton("go", "go"),
+  textOutput("result")
+)
+
+server <- function(input, output, session) {
+  data <- eventReactive(input$go, {
+    waitress <- waiter::Waitress$new(max = input$steps)
+    on.exit(waitress$close())
+    
+    for (i in seq_len(input$steps)) {
+      Sys.sleep(0.5)
+      waitress$inc(1)
+    }
+    
+    runif(1)
+  })
+  
+  output$result <- renderText(round(data(), 2))
+}
+
+shinyApp(ui, server)
+```
+
+
+
+### Spinner
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  waiter::use_waiter(),
+  actionButton("go", "go"),
+  textOutput("result")
+)
+
+server <- function(input, output, session) {
+  data <- eventReactive(input$go, {
+    waiter <- waiter::Waiter$new()
+    waiter$show()
+    on.exit(waiter$hide())
+    
+    Sys.sleep(sample(5, 1))
+    runif(1)
+  })
+  output$result <- renderText(round(data(), 2))
+}
+
+shinyApp(ui, server)
+```
+
+#### Spinner for specific `output`
+
+```{r, eval=FALSE}
+ui <- fluidPage(
+  waiter::use_waiter(),
+  actionButton("go", "go"),
+  plotOutput("plot"),
+)
+
+server <- function(input, output, session) {
+  data <- eventReactive(input$go, {
+    waiter::Waiter$new(id = "plot")$show()
+    
+    Sys.sleep(3)
+    data.frame(x = runif(50), y = runif(50))
+  })
+  
+  output$plot <- renderPlot(plot(data()), res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+### `shinycssloader`
+
+```{r, eval=FALSE}
+library(shiny)
+library(shinycssloaders)
+
+ui <- fluidPage(
+  actionButton("go", "go"),
+  withSpinner(plotOutput("plot")),
+)
+server <- function(input, output, session) {
+  data <- eventReactive(input$go, {
+    Sys.sleep(3)
+    data.frame(x = runif(50), y = runif(50))
+  })
+  
+  output$plot <- renderPlot(plot(data()), res = 96)
+}
+
+shinyApp(ui, server)
+```
+
