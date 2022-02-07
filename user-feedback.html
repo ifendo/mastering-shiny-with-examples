@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 User Feedback | Mastering Shiny with Examples</title>
+  <meta name="description" content="I extracted and captured the executable code examples of Mastering Shiny book for my personal practice and testing." />
+  <meta name="generator" content="bookdown 0.24.9 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 User Feedback | Mastering Shiny with Examples" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="I extracted and captured the executable code examples of Mastering Shiny book for my personal practice and testing." />
+  <meta name="github-repo" content="ifendo/" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 User Feedback | Mastering Shiny with Examples" />
+  
+  <meta name="twitter:description" content="I extracted and captured the executable code examples of Mastering Shiny book for my personal practice and testing." />
+  
+
+<meta name="author" content="Jie Wang" />
+
+
+<meta name="date" content="2022-02-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="graphics.html"/>
+<link rel="next" href="uploads-and-downloads.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Mastering Shiny with Examples </li>
+
+<li class="divider"></li>
+<li><a href="index.html#about">About<span></span></a><ul>
+<li><a href="index.html#mastering-shiny-by-hadley-wickham">Mastering-Shiny by Hadley Wickham<span></span></a></li>
+</ul></li>
+<li class="part"><span><b>Getting started<span></span></b></span></li>
+<li class="chapter" data-level="1" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html"><i class="fa fa-check"></i><b>1</b> Your first Shiny app<span></span></a><ul>
+<li class="chapter" data-level="1.1" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#single-file-app"><i class="fa fa-check"></i><b>1.1</b> Single file app<span></span></a></li>
+<li class="chapter" data-level="1.2" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#adding-ui-controls"><i class="fa fa-check"></i><b>1.2</b> Adding UI controls<span></span></a></li>
+<li class="chapter" data-level="1.3" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#reactive-expression"><i class="fa fa-check"></i><b>1.3</b> Reactive expression<span></span></a></li>
+<li class="chapter" data-level="1.4" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercises"><i class="fa fa-check"></i><b>1.4</b> Exercises<span></span></a><ul>
+<li class="chapter" data-level="1.4.1" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercise-1"><i class="fa fa-check"></i><b>1.4.1</b> Exercise 1<span></span></a></li>
+<li class="chapter" data-level="1.4.2" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercise-2"><i class="fa fa-check"></i><b>1.4.2</b> Exercise 2<span></span></a></li>
+<li class="chapter" data-level="1.4.3" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercise-3"><i class="fa fa-check"></i><b>1.4.3</b> Exercise 3<span></span></a></li>
+<li class="chapter" data-level="1.4.4" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercise-4"><i class="fa fa-check"></i><b>1.4.4</b> Exercise 4<span></span></a></li>
+<li class="chapter" data-level="1.4.5" data-path="your-first-shiny-app.html"><a href="your-first-shiny-app.html#exercise-5"><i class="fa fa-check"></i><b>1.4.5</b> Exercise 5<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="basic-ui.html"><a href="basic-ui.html"><i class="fa fa-check"></i><b>2</b> Basic UI<span></span></a><ul>
+<li class="chapter" data-level="2.1" data-path="basic-ui.html"><a href="basic-ui.html#shiny-extensions"><i class="fa fa-check"></i><b>2.1</b> Shiny extensions<span></span></a></li>
+<li class="chapter" data-level="2.2" data-path="basic-ui.html"><a href="basic-ui.html#inputs"><i class="fa fa-check"></i><b>2.2</b> Inputs<span></span></a><ul>
+<li class="chapter" data-level="2.2.1" data-path="basic-ui.html"><a href="basic-ui.html#common-structure"><i class="fa fa-check"></i><b>2.2.1</b> Common structure<span></span></a></li>
+<li class="chapter" data-level="2.2.2" data-path="basic-ui.html"><a href="basic-ui.html#input-examples"><i class="fa fa-check"></i><b>2.2.2</b> Input examples<span></span></a></li>
+<li class="chapter" data-level="2.2.3" data-path="basic-ui.html"><a href="basic-ui.html#exercises-1"><i class="fa fa-check"></i><b>2.2.3</b> Exercises<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="basic-ui.html"><a href="basic-ui.html#outputs"><i class="fa fa-check"></i><b>2.3</b> Outputs<span></span></a><ul>
+<li class="chapter" data-level="2.3.1" data-path="basic-ui.html"><a href="basic-ui.html#text-output"><i class="fa fa-check"></i><b>2.3.1</b> Text output<span></span></a></li>
+<li class="chapter" data-level="2.3.2" data-path="basic-ui.html"><a href="basic-ui.html#table-output"><i class="fa fa-check"></i><b>2.3.2</b> Table output<span></span></a></li>
+<li class="chapter" data-level="2.3.3" data-path="basic-ui.html"><a href="basic-ui.html#plot-output"><i class="fa fa-check"></i><b>2.3.3</b> Plot output<span></span></a></li>
+<li class="chapter" data-level="2.3.4" data-path="basic-ui.html"><a href="basic-ui.html#exercises-2"><i class="fa fa-check"></i><b>2.3.4</b> Exercises<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="basic-reactivity.html"><a href="basic-reactivity.html"><i class="fa fa-check"></i><b>3</b> Basic reactivity<span></span></a><ul>
+<li class="chapter" data-level="3.1" data-path="basic-reactivity.html"><a href="basic-reactivity.html#server-function"><i class="fa fa-check"></i><b>3.1</b> Server function<span></span></a><ul>
+<li class="chapter" data-level="3.1.1" data-path="basic-reactivity.html"><a href="basic-reactivity.html#input"><i class="fa fa-check"></i><b>3.1.1</b> Input<span></span></a></li>
+<li class="chapter" data-level="3.1.2" data-path="basic-reactivity.html"><a href="basic-reactivity.html#output"><i class="fa fa-check"></i><b>3.1.2</b> Output<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="basic-reactivity.html"><a href="basic-reactivity.html#reactive-programming"><i class="fa fa-check"></i><b>3.2</b> Reactive programming<span></span></a><ul>
+<li class="chapter" data-level="3.2.1" data-path="basic-reactivity.html"><a href="basic-reactivity.html#reactive-programming-exercises"><i class="fa fa-check"></i><b>3.2.1</b> Reactive programming exercises<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="basic-reactivity.html"><a href="basic-reactivity.html#reactive-expressions"><i class="fa fa-check"></i><b>3.3</b> Reactive Expressions<span></span></a></li>
+<li class="chapter" data-level="3.4" data-path="basic-reactivity.html"><a href="basic-reactivity.html#controlling-timeing-of-evaluation"><i class="fa fa-check"></i><b>3.4</b> Controlling timeing of evaluation<span></span></a><ul>
+<li class="chapter" data-level="3.4.1" data-path="basic-reactivity.html"><a href="basic-reactivity.html#eventreactive"><i class="fa fa-check"></i><b>3.4.1</b> eventReactive<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="3.5" data-path="basic-reactivity.html"><a href="basic-reactivity.html#observers"><i class="fa fa-check"></i><b>3.5</b> Observers<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="case-study-er-injuries.html"><a href="case-study-er-injuries.html"><i class="fa fa-check"></i><b>4</b> Case study: ER injuries<span></span></a></li>
+<li class="chapter" data-level="5" data-path="workflow.html"><a href="workflow.html"><i class="fa fa-check"></i><b>5</b> Workflow<span></span></a><ul>
+<li class="chapter" data-level="5.1" data-path="workflow.html"><a href="workflow.html#case-study"><i class="fa fa-check"></i><b>5.1</b> Case Study<span></span></a><ul>
+<li class="chapter" data-level="5.1.1" data-path="workflow.html"><a href="workflow.html#app-showing-missing-values"><i class="fa fa-check"></i><b>5.1.1</b> app showing missing values<span></span></a></li>
+<li class="chapter" data-level="5.1.2" data-path="workflow.html"><a href="workflow.html#app-after-debugging"><i class="fa fa-check"></i><b>5.1.2</b> app after debugging<span></span></a></li>
+<li class="chapter" data-level="5.1.3" data-path="workflow.html"><a href="workflow.html#using-glue-for-debugging"><i class="fa fa-check"></i><b>5.1.3</b> using <code>glue</code> for debugging<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="layout-themes-html.html"><a href="layout-themes-html.html"><i class="fa fa-check"></i><b>6</b> Layout, themes, HTML<span></span></a><ul>
+<li class="chapter" data-level="6.1" data-path="layout-themes-html.html"><a href="layout-themes-html.html#single-page-layouts"><i class="fa fa-check"></i><b>6.1</b> Single page layouts<span></span></a><ul>
+<li class="chapter" data-level="6.1.1" data-path="layout-themes-html.html"><a href="layout-themes-html.html#exercises-3"><i class="fa fa-check"></i><b>6.1.1</b> Exercises<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.2" data-path="layout-themes-html.html"><a href="layout-themes-html.html#multi-page-layouts"><i class="fa fa-check"></i><b>6.2</b> Multi-page layouts<span></span></a><ul>
+<li class="chapter" data-level="6.2.1" data-path="layout-themes-html.html"><a href="layout-themes-html.html#tabsetpanel"><i class="fa fa-check"></i><b>6.2.1</b> <code>tabsetPanel</code><span></span></a></li>
+<li class="chapter" data-level="6.2.2" data-path="layout-themes-html.html"><a href="layout-themes-html.html#navlistpanel"><i class="fa fa-check"></i><b>6.2.2</b> <code>navlistPanel</code><span></span></a></li>
+<li class="chapter" data-level="6.2.3" data-path="layout-themes-html.html"><a href="layout-themes-html.html#navbarpage"><i class="fa fa-check"></i><b>6.2.3</b> <code>navbarPage</code><span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="6.3" data-path="layout-themes-html.html"><a href="layout-themes-html.html#bootstrap"><i class="fa fa-check"></i><b>6.3</b> Bootstrap<span></span></a></li>
+<li class="chapter" data-level="6.4" data-path="layout-themes-html.html"><a href="layout-themes-html.html#themes"><i class="fa fa-check"></i><b>6.4</b> Themes<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="graphics.html"><a href="graphics.html"><i class="fa fa-check"></i><b>7</b> Graphics<span></span></a><ul>
+<li class="chapter" data-level="7.1" data-path="graphics.html"><a href="graphics.html#plotoutput-click-event"><i class="fa fa-check"></i><b>7.1</b> <code>plotOutput</code> <code>click</code> event<span></span></a></li>
+<li class="chapter" data-level="7.2" data-path="graphics.html"><a href="graphics.html#plotoutput-click-nearpoints"><i class="fa fa-check"></i><b>7.2</b> <code>plotOutput</code> <code>click</code> nearPoints<span></span></a></li>
+<li class="chapter" data-level="7.3" data-path="graphics.html"><a href="graphics.html#plotoutput-brush-brushedpoints"><i class="fa fa-check"></i><b>7.3</b> <code>plotOutput</code> <code>brush</code> brushedPoints<span></span></a></li>
+<li class="chapter" data-level="7.4" data-path="graphics.html"><a href="graphics.html#modifying-the-plot"><i class="fa fa-check"></i><b>7.4</b> Modifying the plot<span></span></a><ul>
+<li class="chapter" data-level="7.4.1" data-path="graphics.html"><a href="graphics.html#dbclick-plot_rest"><i class="fa fa-check"></i><b>7.4.1</b> <code>dbclick</code> plot_rest<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="7.5" data-path="graphics.html"><a href="graphics.html#dynamic-height-and-width"><i class="fa fa-check"></i><b>7.5</b> Dynamic height and width<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8" data-path="user-feedback.html"><a href="user-feedback.html"><i class="fa fa-check"></i><b>8</b> User Feedback<span></span></a><ul>
+<li class="chapter" data-level="8.1" data-path="user-feedback.html"><a href="user-feedback.html#validation"><i class="fa fa-check"></i><b>8.1</b> Validation<span></span></a><ul>
+<li class="chapter" data-level="8.1.1" data-path="user-feedback.html"><a href="user-feedback.html#validating-input"><i class="fa fa-check"></i><b>8.1.1</b> Validating input<span></span></a></li>
+<li class="chapter" data-level="8.1.2" data-path="user-feedback.html"><a href="user-feedback.html#req"><i class="fa fa-check"></i><b>8.1.2</b> <code>req</code><span></span></a></li>
+<li class="chapter" data-level="8.1.3" data-path="user-feedback.html"><a href="user-feedback.html#validate-output"><i class="fa fa-check"></i><b>8.1.3</b> Validate output<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="8.2" data-path="user-feedback.html"><a href="user-feedback.html#notifications"><i class="fa fa-check"></i><b>8.2</b> Notifications<span></span></a></li>
+<li class="chapter" data-level="8.3" data-path="user-feedback.html"><a href="user-feedback.html#progress-bars"><i class="fa fa-check"></i><b>8.3</b> Progress bars<span></span></a><ul>
+<li class="chapter" data-level="8.3.1" data-path="user-feedback.html"><a href="user-feedback.html#waiter"><i class="fa fa-check"></i><b>8.3.1</b> Waiter<span></span></a></li>
+<li class="chapter" data-level="8.3.2" data-path="user-feedback.html"><a href="user-feedback.html#spinner"><i class="fa fa-check"></i><b>8.3.2</b> Spinner<span></span></a></li>
+<li class="chapter" data-level="8.3.3" data-path="user-feedback.html"><a href="user-feedback.html#shinycssloader"><i class="fa fa-check"></i><b>8.3.3</b> <code>shinycssloader</code><span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="9" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html"><i class="fa fa-check"></i><b>9</b> Uploads and downloads<span></span></a><ul>
+<li class="chapter" data-level="9.1" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#upload"><i class="fa fa-check"></i><b>9.1</b> Upload<span></span></a><ul>
+<li class="chapter" data-level="9.1.1" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#uploading-data"><i class="fa fa-check"></i><b>9.1.1</b> Uploading data<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.2" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#download"><i class="fa fa-check"></i><b>9.2</b> Download<span></span></a><ul>
+<li class="chapter" data-level="9.2.1" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#download-tsv"><i class="fa fa-check"></i><b>9.2.1</b> Download <code>tsv</code><span></span></a></li>
+<li class="chapter" data-level="9.2.2" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#download-report"><i class="fa fa-check"></i><b>9.2.2</b> Download report<span></span></a></li>
+<li class="chapter" data-level="9.2.3" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#better-version"><i class="fa fa-check"></i><b>9.2.3</b> better version<span></span></a></li>
+</ul></li>
+<li class="chapter" data-level="9.3" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#case-study-1"><i class="fa fa-check"></i><b>9.3</b> Case study<span></span></a></li>
+<li class="chapter" data-level="9.4" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#exercises-4"><i class="fa fa-check"></i><b>9.4</b> Exercises<span></span></a><ul>
+<li class="chapter" data-level="9.4.1" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#ex-1-2"><i class="fa fa-check"></i><b>9.4.1</b> Ex 1<span></span></a></li>
+<li class="chapter" data-level="9.4.2" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#ex-2-2"><i class="fa fa-check"></i><b>9.4.2</b> Ex 2<span></span></a></li>
+<li class="chapter" data-level="9.4.3" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#ex-3-2"><i class="fa fa-check"></i><b>9.4.3</b> Ex 3<span></span></a></li>
+<li class="chapter" data-level="9.4.4" data-path="uploads-and-downloads.html"><a href="uploads-and-downloads.html#ex-5"><i class="fa fa-check"></i><b>9.4.4</b> Ex 5<span></span></a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="10" data-path="dynamic-ui.html"><a href="dynamic-ui.html"><i class="fa fa-check"></i><b>10</b> Dynamic UI<span></span></a></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Mastering Shiny with Examples</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="user-feedback" class="section level1 hasAnchor">
+<h1><span class="header-section-number">Chapter 8</span> User Feedback<a href="user-feedback.html#user-feedback" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="validation" class="section level2 hasAnchor">
+<h2><span class="header-section-number">8.1</span> Validation<a href="user-feedback.html#validation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="validating-input" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.1.1</span> Validating input<a href="user-feedback.html#validating-input" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="user-feedback.html#cb43-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb43-2"><a href="user-feedback.html#cb43-2"></a><span class="kw">library</span>(shinyFeedback)</span>
+<span id="cb43-3"><a href="user-feedback.html#cb43-3"></a></span>
+<span id="cb43-4"><a href="user-feedback.html#cb43-4"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb43-5"><a href="user-feedback.html#cb43-5"></a>  shinyFeedback<span class="op">::</span><span class="kw">useShinyFeedback</span>(),</span>
+<span id="cb43-6"><a href="user-feedback.html#cb43-6"></a>  <span class="kw">numericInput</span>(<span class="st">&quot;n&quot;</span>, <span class="st">&quot;n&quot;</span>, <span class="dt">value =</span> <span class="dv">10</span>),</span>
+<span id="cb43-7"><a href="user-feedback.html#cb43-7"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;half&quot;</span>)</span>
+<span id="cb43-8"><a href="user-feedback.html#cb43-8"></a>)</span>
+<span id="cb43-9"><a href="user-feedback.html#cb43-9"></a></span>
+<span id="cb43-10"><a href="user-feedback.html#cb43-10"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb43-11"><a href="user-feedback.html#cb43-11"></a>  half &lt;-<span class="st"> </span><span class="kw">reactive</span>({</span>
+<span id="cb43-12"><a href="user-feedback.html#cb43-12"></a>    even &lt;-<span class="st"> </span>input<span class="op">$</span>n <span class="op">%%</span><span class="st"> </span><span class="dv">2</span> <span class="op">==</span><span class="st"> </span><span class="dv">0</span></span>
+<span id="cb43-13"><a href="user-feedback.html#cb43-13"></a>    shinyFeedback<span class="op">::</span><span class="kw">feedbackWarning</span>(<span class="st">&quot;n&quot;</span>, <span class="op">!</span>even, <span class="st">&quot;Please select an even number&quot;</span>)</span>
+<span id="cb43-14"><a href="user-feedback.html#cb43-14"></a>    input<span class="op">$</span>n <span class="op">/</span><span class="st"> </span><span class="dv">2</span>    </span>
+<span id="cb43-15"><a href="user-feedback.html#cb43-15"></a>  })</span>
+<span id="cb43-16"><a href="user-feedback.html#cb43-16"></a>  </span>
+<span id="cb43-17"><a href="user-feedback.html#cb43-17"></a>  output<span class="op">$</span>half &lt;-<span class="st"> </span><span class="kw">renderText</span>(<span class="kw">half</span>())</span>
+<span id="cb43-18"><a href="user-feedback.html#cb43-18"></a>}</span>
+<span id="cb43-19"><a href="user-feedback.html#cb43-19"></a></span>
+<span id="cb43-20"><a href="user-feedback.html#cb43-20"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="req" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.1.2</span> <code>req</code><a href="user-feedback.html#req" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="user-feedback.html#cb44-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb44-2"><a href="user-feedback.html#cb44-2"></a></span>
+<span id="cb44-3"><a href="user-feedback.html#cb44-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb44-4"><a href="user-feedback.html#cb44-4"></a>  <span class="kw">selectInput</span>(<span class="st">&quot;language&quot;</span>, <span class="st">&quot;Language&quot;</span>, <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;&quot;</span>, <span class="st">&quot;English&quot;</span>, <span class="st">&quot;Maori&quot;</span>)),</span>
+<span id="cb44-5"><a href="user-feedback.html#cb44-5"></a>  <span class="kw">textInput</span>(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;Name&quot;</span>),</span>
+<span id="cb44-6"><a href="user-feedback.html#cb44-6"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;greeting&quot;</span>)</span>
+<span id="cb44-7"><a href="user-feedback.html#cb44-7"></a>)</span>
+<span id="cb44-8"><a href="user-feedback.html#cb44-8"></a></span>
+<span id="cb44-9"><a href="user-feedback.html#cb44-9"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb44-10"><a href="user-feedback.html#cb44-10"></a>  greetings &lt;-<span class="st"> </span><span class="kw">c</span>(</span>
+<span id="cb44-11"><a href="user-feedback.html#cb44-11"></a>    <span class="dt">English =</span> <span class="st">&quot;Hello&quot;</span>, </span>
+<span id="cb44-12"><a href="user-feedback.html#cb44-12"></a>    <span class="dt">Maori =</span> <span class="st">&quot;Kia ora&quot;</span></span>
+<span id="cb44-13"><a href="user-feedback.html#cb44-13"></a>  )</span>
+<span id="cb44-14"><a href="user-feedback.html#cb44-14"></a>  output<span class="op">$</span>greeting &lt;-<span class="st"> </span><span class="kw">renderText</span>({</span>
+<span id="cb44-15"><a href="user-feedback.html#cb44-15"></a>    <span class="kw">req</span>(input<span class="op">$</span>language, input<span class="op">$</span>name)</span>
+<span id="cb44-16"><a href="user-feedback.html#cb44-16"></a>    <span class="kw">paste0</span>(greetings[[input<span class="op">$</span>language]], <span class="st">&quot; &quot;</span>, input<span class="op">$</span>name, <span class="st">&quot;!&quot;</span>)</span>
+<span id="cb44-17"><a href="user-feedback.html#cb44-17"></a>  })</span>
+<span id="cb44-18"><a href="user-feedback.html#cb44-18"></a>}</span>
+<span id="cb44-19"><a href="user-feedback.html#cb44-19"></a></span>
+<span id="cb44-20"><a href="user-feedback.html#cb44-20"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="user-feedback.html#cb45-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb45-2"><a href="user-feedback.html#cb45-2"></a></span>
+<span id="cb45-3"><a href="user-feedback.html#cb45-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb45-4"><a href="user-feedback.html#cb45-4"></a>  shinyFeedback<span class="op">::</span><span class="kw">useShinyFeedback</span>(),</span>
+<span id="cb45-5"><a href="user-feedback.html#cb45-5"></a>  <span class="kw">textInput</span>(<span class="st">&quot;dataset&quot;</span>, <span class="st">&quot;Dataset name&quot;</span>), </span>
+<span id="cb45-6"><a href="user-feedback.html#cb45-6"></a>  <span class="kw">tableOutput</span>(<span class="st">&quot;data&quot;</span>)</span>
+<span id="cb45-7"><a href="user-feedback.html#cb45-7"></a>)</span>
+<span id="cb45-8"><a href="user-feedback.html#cb45-8"></a></span>
+<span id="cb45-9"><a href="user-feedback.html#cb45-9"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb45-10"><a href="user-feedback.html#cb45-10"></a>  data &lt;-<span class="st"> </span><span class="kw">reactive</span>({</span>
+<span id="cb45-11"><a href="user-feedback.html#cb45-11"></a>    <span class="kw">req</span>(input<span class="op">$</span>dataset)</span>
+<span id="cb45-12"><a href="user-feedback.html#cb45-12"></a>    </span>
+<span id="cb45-13"><a href="user-feedback.html#cb45-13"></a>    exists &lt;-<span class="st"> </span><span class="kw">exists</span>(input<span class="op">$</span>dataset, <span class="st">&quot;package:datasets&quot;</span>)</span>
+<span id="cb45-14"><a href="user-feedback.html#cb45-14"></a>    shinyFeedback<span class="op">::</span><span class="kw">feedbackDanger</span>(<span class="st">&quot;dataset&quot;</span>, <span class="op">!</span>exists, <span class="st">&quot;Unknown dataset&quot;</span>)</span>
+<span id="cb45-15"><a href="user-feedback.html#cb45-15"></a>    <span class="kw">req</span>(exists, <span class="dt">cancelOutput =</span> <span class="ot">TRUE</span>)</span>
+<span id="cb45-16"><a href="user-feedback.html#cb45-16"></a></span>
+<span id="cb45-17"><a href="user-feedback.html#cb45-17"></a>    <span class="kw">get</span>(input<span class="op">$</span>dataset, <span class="st">&quot;package:datasets&quot;</span>)</span>
+<span id="cb45-18"><a href="user-feedback.html#cb45-18"></a>  })</span>
+<span id="cb45-19"><a href="user-feedback.html#cb45-19"></a>  </span>
+<span id="cb45-20"><a href="user-feedback.html#cb45-20"></a>  output<span class="op">$</span>data &lt;-<span class="st"> </span><span class="kw">renderTable</span>({</span>
+<span id="cb45-21"><a href="user-feedback.html#cb45-21"></a>    <span class="kw">head</span>(<span class="kw">data</span>())</span>
+<span id="cb45-22"><a href="user-feedback.html#cb45-22"></a>  })</span>
+<span id="cb45-23"><a href="user-feedback.html#cb45-23"></a>}</span>
+<span id="cb45-24"><a href="user-feedback.html#cb45-24"></a></span>
+<span id="cb45-25"><a href="user-feedback.html#cb45-25"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="validate-output" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.1.3</span> Validate output<a href="user-feedback.html#validate-output" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="user-feedback.html#cb46-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb46-2"><a href="user-feedback.html#cb46-2"></a></span>
+<span id="cb46-3"><a href="user-feedback.html#cb46-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb46-4"><a href="user-feedback.html#cb46-4"></a>  <span class="kw">numericInput</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;x&quot;</span>, <span class="dt">value =</span> <span class="dv">0</span>),</span>
+<span id="cb46-5"><a href="user-feedback.html#cb46-5"></a>  <span class="kw">selectInput</span>(<span class="st">&quot;trans&quot;</span>, <span class="st">&quot;transformation&quot;</span>, </span>
+<span id="cb46-6"><a href="user-feedback.html#cb46-6"></a>    <span class="dt">choices =</span> <span class="kw">c</span>(<span class="st">&quot;square&quot;</span>, <span class="st">&quot;log&quot;</span>, <span class="st">&quot;square-root&quot;</span>)</span>
+<span id="cb46-7"><a href="user-feedback.html#cb46-7"></a>  ),</span>
+<span id="cb46-8"><a href="user-feedback.html#cb46-8"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;out&quot;</span>)</span>
+<span id="cb46-9"><a href="user-feedback.html#cb46-9"></a>)</span>
+<span id="cb46-10"><a href="user-feedback.html#cb46-10"></a></span>
+<span id="cb46-11"><a href="user-feedback.html#cb46-11"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb46-12"><a href="user-feedback.html#cb46-12"></a>  output<span class="op">$</span>out &lt;-<span class="st"> </span><span class="kw">renderText</span>({</span>
+<span id="cb46-13"><a href="user-feedback.html#cb46-13"></a>    <span class="cf">if</span> (input<span class="op">$</span>x <span class="op">&lt;</span><span class="st"> </span><span class="dv">0</span> <span class="op">&amp;&amp;</span><span class="st"> </span>input<span class="op">$</span>trans <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;log&quot;</span>, <span class="st">&quot;square-root&quot;</span>)) {</span>
+<span id="cb46-14"><a href="user-feedback.html#cb46-14"></a>      <span class="kw">validate</span>(<span class="st">&quot;x can not be negative for this transformation&quot;</span>)</span>
+<span id="cb46-15"><a href="user-feedback.html#cb46-15"></a>    }</span>
+<span id="cb46-16"><a href="user-feedback.html#cb46-16"></a>    </span>
+<span id="cb46-17"><a href="user-feedback.html#cb46-17"></a>    <span class="cf">switch</span>(input<span class="op">$</span>trans,</span>
+<span id="cb46-18"><a href="user-feedback.html#cb46-18"></a>      <span class="dt">square =</span> input<span class="op">$</span>x <span class="op">^</span><span class="st"> </span><span class="dv">2</span>,</span>
+<span id="cb46-19"><a href="user-feedback.html#cb46-19"></a>      <span class="st">&quot;square-root&quot;</span> =<span class="st"> </span><span class="kw">sqrt</span>(input<span class="op">$</span>x),</span>
+<span id="cb46-20"><a href="user-feedback.html#cb46-20"></a>      <span class="dt">log =</span> <span class="kw">log</span>(input<span class="op">$</span>x)</span>
+<span id="cb46-21"><a href="user-feedback.html#cb46-21"></a>    )</span>
+<span id="cb46-22"><a href="user-feedback.html#cb46-22"></a>  })</span>
+<span id="cb46-23"><a href="user-feedback.html#cb46-23"></a>}</span>
+<span id="cb46-24"><a href="user-feedback.html#cb46-24"></a></span>
+<span id="cb46-25"><a href="user-feedback.html#cb46-25"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+</div>
+<div id="notifications" class="section level2 hasAnchor">
+<h2><span class="header-section-number">8.2</span> Notifications<a href="user-feedback.html#notifications" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="user-feedback.html#cb47-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb47-2"><a href="user-feedback.html#cb47-2"></a></span>
+<span id="cb47-3"><a href="user-feedback.html#cb47-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb47-4"><a href="user-feedback.html#cb47-4"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;goodnight&quot;</span>, <span class="st">&quot;Good night&quot;</span>)</span>
+<span id="cb47-5"><a href="user-feedback.html#cb47-5"></a>)</span>
+<span id="cb47-6"><a href="user-feedback.html#cb47-6"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb47-7"><a href="user-feedback.html#cb47-7"></a>  <span class="kw">observeEvent</span>(input<span class="op">$</span>goodnight, {</span>
+<span id="cb47-8"><a href="user-feedback.html#cb47-8"></a>    <span class="kw">showNotification</span>(<span class="st">&quot;So long&quot;</span>)</span>
+<span id="cb47-9"><a href="user-feedback.html#cb47-9"></a>    <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb47-10"><a href="user-feedback.html#cb47-10"></a>    <span class="kw">showNotification</span>(<span class="st">&quot;Farewell&quot;</span>)</span>
+<span id="cb47-11"><a href="user-feedback.html#cb47-11"></a>    <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb47-12"><a href="user-feedback.html#cb47-12"></a>    <span class="kw">showNotification</span>(<span class="st">&quot;Auf Wiedersehen&quot;</span>)</span>
+<span id="cb47-13"><a href="user-feedback.html#cb47-13"></a>    <span class="kw">Sys.sleep</span>(<span class="dv">1</span>)</span>
+<span id="cb47-14"><a href="user-feedback.html#cb47-14"></a>    <span class="kw">showNotification</span>(<span class="st">&quot;Adieu&quot;</span>)</span>
+<span id="cb47-15"><a href="user-feedback.html#cb47-15"></a>  })</span>
+<span id="cb47-16"><a href="user-feedback.html#cb47-16"></a>}</span>
+<span id="cb47-17"><a href="user-feedback.html#cb47-17"></a></span>
+<span id="cb47-18"><a href="user-feedback.html#cb47-18"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="progress-bars" class="section level2 hasAnchor">
+<h2><span class="header-section-number">8.3</span> Progress bars<a href="user-feedback.html#progress-bars" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="user-feedback.html#cb48-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb48-2"><a href="user-feedback.html#cb48-2"></a></span>
+<span id="cb48-3"><a href="user-feedback.html#cb48-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb48-4"><a href="user-feedback.html#cb48-4"></a>  <span class="kw">numericInput</span>(<span class="st">&quot;steps&quot;</span>, <span class="st">&quot;How many steps?&quot;</span>, <span class="dv">10</span>),</span>
+<span id="cb48-5"><a href="user-feedback.html#cb48-5"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;go&quot;</span>, <span class="st">&quot;go&quot;</span>),</span>
+<span id="cb48-6"><a href="user-feedback.html#cb48-6"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;result&quot;</span>)</span>
+<span id="cb48-7"><a href="user-feedback.html#cb48-7"></a>)</span>
+<span id="cb48-8"><a href="user-feedback.html#cb48-8"></a></span>
+<span id="cb48-9"><a href="user-feedback.html#cb48-9"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb48-10"><a href="user-feedback.html#cb48-10"></a>  data &lt;-<span class="st"> </span><span class="kw">eventReactive</span>(input<span class="op">$</span>go, {</span>
+<span id="cb48-11"><a href="user-feedback.html#cb48-11"></a>    <span class="kw">withProgress</span>(<span class="dt">message =</span> <span class="st">&quot;Computing random number&quot;</span>, {</span>
+<span id="cb48-12"><a href="user-feedback.html#cb48-12"></a>      <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(input<span class="op">$</span>steps)) {</span>
+<span id="cb48-13"><a href="user-feedback.html#cb48-13"></a>        <span class="kw">Sys.sleep</span>(<span class="fl">0.5</span>)</span>
+<span id="cb48-14"><a href="user-feedback.html#cb48-14"></a>        <span class="kw">incProgress</span>(<span class="dv">1</span> <span class="op">/</span><span class="st"> </span>input<span class="op">$</span>steps)</span>
+<span id="cb48-15"><a href="user-feedback.html#cb48-15"></a>      }</span>
+<span id="cb48-16"><a href="user-feedback.html#cb48-16"></a>      <span class="kw">runif</span>(<span class="dv">1</span>)</span>
+<span id="cb48-17"><a href="user-feedback.html#cb48-17"></a>    })</span>
+<span id="cb48-18"><a href="user-feedback.html#cb48-18"></a>  })</span>
+<span id="cb48-19"><a href="user-feedback.html#cb48-19"></a>  </span>
+<span id="cb48-20"><a href="user-feedback.html#cb48-20"></a>  output<span class="op">$</span>result &lt;-<span class="st"> </span><span class="kw">renderText</span>(<span class="kw">round</span>(<span class="kw">data</span>(), <span class="dv">2</span>))</span>
+<span id="cb48-21"><a href="user-feedback.html#cb48-21"></a>}</span>
+<span id="cb48-22"><a href="user-feedback.html#cb48-22"></a></span>
+<span id="cb48-23"><a href="user-feedback.html#cb48-23"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+<div id="waiter" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.3.1</span> Waiter<a href="user-feedback.html#waiter" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="user-feedback.html#cb49-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb49-2"><a href="user-feedback.html#cb49-2"></a><span class="kw">library</span>(waiter)</span>
+<span id="cb49-3"><a href="user-feedback.html#cb49-3"></a></span>
+<span id="cb49-4"><a href="user-feedback.html#cb49-4"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb49-5"><a href="user-feedback.html#cb49-5"></a>  waiter<span class="op">::</span><span class="kw">use_waitress</span>(),</span>
+<span id="cb49-6"><a href="user-feedback.html#cb49-6"></a>  <span class="kw">numericInput</span>(<span class="st">&quot;steps&quot;</span>, <span class="st">&quot;How many steps?&quot;</span>, <span class="dv">10</span>),</span>
+<span id="cb49-7"><a href="user-feedback.html#cb49-7"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;go&quot;</span>, <span class="st">&quot;go&quot;</span>),</span>
+<span id="cb49-8"><a href="user-feedback.html#cb49-8"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;result&quot;</span>)</span>
+<span id="cb49-9"><a href="user-feedback.html#cb49-9"></a>)</span>
+<span id="cb49-10"><a href="user-feedback.html#cb49-10"></a></span>
+<span id="cb49-11"><a href="user-feedback.html#cb49-11"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb49-12"><a href="user-feedback.html#cb49-12"></a>  data &lt;-<span class="st"> </span><span class="kw">eventReactive</span>(input<span class="op">$</span>go, {</span>
+<span id="cb49-13"><a href="user-feedback.html#cb49-13"></a>    waitress &lt;-<span class="st"> </span>waiter<span class="op">::</span>Waitress<span class="op">$</span><span class="kw">new</span>(<span class="dt">max =</span> input<span class="op">$</span>steps)</span>
+<span id="cb49-14"><a href="user-feedback.html#cb49-14"></a>    <span class="kw">on.exit</span>(waitress<span class="op">$</span><span class="kw">close</span>())</span>
+<span id="cb49-15"><a href="user-feedback.html#cb49-15"></a>    </span>
+<span id="cb49-16"><a href="user-feedback.html#cb49-16"></a>    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(input<span class="op">$</span>steps)) {</span>
+<span id="cb49-17"><a href="user-feedback.html#cb49-17"></a>      <span class="kw">Sys.sleep</span>(<span class="fl">0.5</span>)</span>
+<span id="cb49-18"><a href="user-feedback.html#cb49-18"></a>      waitress<span class="op">$</span><span class="kw">inc</span>(<span class="dv">1</span>)</span>
+<span id="cb49-19"><a href="user-feedback.html#cb49-19"></a>    }</span>
+<span id="cb49-20"><a href="user-feedback.html#cb49-20"></a>    </span>
+<span id="cb49-21"><a href="user-feedback.html#cb49-21"></a>    <span class="kw">runif</span>(<span class="dv">1</span>)</span>
+<span id="cb49-22"><a href="user-feedback.html#cb49-22"></a>  })</span>
+<span id="cb49-23"><a href="user-feedback.html#cb49-23"></a>  </span>
+<span id="cb49-24"><a href="user-feedback.html#cb49-24"></a>  output<span class="op">$</span>result &lt;-<span class="st"> </span><span class="kw">renderText</span>(<span class="kw">round</span>(<span class="kw">data</span>(), <span class="dv">2</span>))</span>
+<span id="cb49-25"><a href="user-feedback.html#cb49-25"></a>}</span>
+<span id="cb49-26"><a href="user-feedback.html#cb49-26"></a></span>
+<span id="cb49-27"><a href="user-feedback.html#cb49-27"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+<div id="spinner" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.3.2</span> Spinner<a href="user-feedback.html#spinner" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="user-feedback.html#cb50-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb50-2"><a href="user-feedback.html#cb50-2"></a></span>
+<span id="cb50-3"><a href="user-feedback.html#cb50-3"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb50-4"><a href="user-feedback.html#cb50-4"></a>  waiter<span class="op">::</span><span class="kw">use_waiter</span>(),</span>
+<span id="cb50-5"><a href="user-feedback.html#cb50-5"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;go&quot;</span>, <span class="st">&quot;go&quot;</span>),</span>
+<span id="cb50-6"><a href="user-feedback.html#cb50-6"></a>  <span class="kw">textOutput</span>(<span class="st">&quot;result&quot;</span>)</span>
+<span id="cb50-7"><a href="user-feedback.html#cb50-7"></a>)</span>
+<span id="cb50-8"><a href="user-feedback.html#cb50-8"></a></span>
+<span id="cb50-9"><a href="user-feedback.html#cb50-9"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb50-10"><a href="user-feedback.html#cb50-10"></a>  data &lt;-<span class="st"> </span><span class="kw">eventReactive</span>(input<span class="op">$</span>go, {</span>
+<span id="cb50-11"><a href="user-feedback.html#cb50-11"></a>    waiter &lt;-<span class="st"> </span>waiter<span class="op">::</span>Waiter<span class="op">$</span><span class="kw">new</span>()</span>
+<span id="cb50-12"><a href="user-feedback.html#cb50-12"></a>    waiter<span class="op">$</span><span class="kw">show</span>()</span>
+<span id="cb50-13"><a href="user-feedback.html#cb50-13"></a>    <span class="kw">on.exit</span>(waiter<span class="op">$</span><span class="kw">hide</span>())</span>
+<span id="cb50-14"><a href="user-feedback.html#cb50-14"></a>    </span>
+<span id="cb50-15"><a href="user-feedback.html#cb50-15"></a>    <span class="kw">Sys.sleep</span>(<span class="kw">sample</span>(<span class="dv">5</span>, <span class="dv">1</span>))</span>
+<span id="cb50-16"><a href="user-feedback.html#cb50-16"></a>    <span class="kw">runif</span>(<span class="dv">1</span>)</span>
+<span id="cb50-17"><a href="user-feedback.html#cb50-17"></a>  })</span>
+<span id="cb50-18"><a href="user-feedback.html#cb50-18"></a>  output<span class="op">$</span>result &lt;-<span class="st"> </span><span class="kw">renderText</span>(<span class="kw">round</span>(<span class="kw">data</span>(), <span class="dv">2</span>))</span>
+<span id="cb50-19"><a href="user-feedback.html#cb50-19"></a>}</span>
+<span id="cb50-20"><a href="user-feedback.html#cb50-20"></a></span>
+<span id="cb50-21"><a href="user-feedback.html#cb50-21"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+<div id="spinner-for-specific-output" class="section level4 hasAnchor">
+<h4><span class="header-section-number">8.3.2.1</span> Spinner for specific <code>output</code><a href="user-feedback.html#spinner-for-specific-output" class="anchor-section" aria-label="Anchor link to header"></a></h4>
+<div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb51-1"><a href="user-feedback.html#cb51-1"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb51-2"><a href="user-feedback.html#cb51-2"></a>  waiter<span class="op">::</span><span class="kw">use_waiter</span>(),</span>
+<span id="cb51-3"><a href="user-feedback.html#cb51-3"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;go&quot;</span>, <span class="st">&quot;go&quot;</span>),</span>
+<span id="cb51-4"><a href="user-feedback.html#cb51-4"></a>  <span class="kw">plotOutput</span>(<span class="st">&quot;plot&quot;</span>),</span>
+<span id="cb51-5"><a href="user-feedback.html#cb51-5"></a>)</span>
+<span id="cb51-6"><a href="user-feedback.html#cb51-6"></a></span>
+<span id="cb51-7"><a href="user-feedback.html#cb51-7"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb51-8"><a href="user-feedback.html#cb51-8"></a>  data &lt;-<span class="st"> </span><span class="kw">eventReactive</span>(input<span class="op">$</span>go, {</span>
+<span id="cb51-9"><a href="user-feedback.html#cb51-9"></a>    waiter<span class="op">::</span>Waiter<span class="op">$</span><span class="kw">new</span>(<span class="dt">id =</span> <span class="st">&quot;plot&quot;</span>)<span class="op">$</span><span class="kw">show</span>()</span>
+<span id="cb51-10"><a href="user-feedback.html#cb51-10"></a>    </span>
+<span id="cb51-11"><a href="user-feedback.html#cb51-11"></a>    <span class="kw">Sys.sleep</span>(<span class="dv">3</span>)</span>
+<span id="cb51-12"><a href="user-feedback.html#cb51-12"></a>    <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">runif</span>(<span class="dv">50</span>), <span class="dt">y =</span> <span class="kw">runif</span>(<span class="dv">50</span>))</span>
+<span id="cb51-13"><a href="user-feedback.html#cb51-13"></a>  })</span>
+<span id="cb51-14"><a href="user-feedback.html#cb51-14"></a>  </span>
+<span id="cb51-15"><a href="user-feedback.html#cb51-15"></a>  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>(<span class="kw">plot</span>(<span class="kw">data</span>()), <span class="dt">res =</span> <span class="dv">96</span>)</span>
+<span id="cb51-16"><a href="user-feedback.html#cb51-16"></a>}</span>
+<span id="cb51-17"><a href="user-feedback.html#cb51-17"></a></span>
+<span id="cb51-18"><a href="user-feedback.html#cb51-18"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+</div>
+</div>
+<div id="shinycssloader" class="section level3 hasAnchor">
+<h3><span class="header-section-number">8.3.3</span> <code>shinycssloader</code><a href="user-feedback.html#shinycssloader" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="user-feedback.html#cb52-1"></a><span class="kw">library</span>(shiny)</span>
+<span id="cb52-2"><a href="user-feedback.html#cb52-2"></a><span class="kw">library</span>(shinycssloaders)</span>
+<span id="cb52-3"><a href="user-feedback.html#cb52-3"></a></span>
+<span id="cb52-4"><a href="user-feedback.html#cb52-4"></a>ui &lt;-<span class="st"> </span><span class="kw">fluidPage</span>(</span>
+<span id="cb52-5"><a href="user-feedback.html#cb52-5"></a>  <span class="kw">actionButton</span>(<span class="st">&quot;go&quot;</span>, <span class="st">&quot;go&quot;</span>),</span>
+<span id="cb52-6"><a href="user-feedback.html#cb52-6"></a>  <span class="kw">withSpinner</span>(<span class="kw">plotOutput</span>(<span class="st">&quot;plot&quot;</span>)),</span>
+<span id="cb52-7"><a href="user-feedback.html#cb52-7"></a>)</span>
+<span id="cb52-8"><a href="user-feedback.html#cb52-8"></a>server &lt;-<span class="st"> </span><span class="cf">function</span>(input, output, session) {</span>
+<span id="cb52-9"><a href="user-feedback.html#cb52-9"></a>  data &lt;-<span class="st"> </span><span class="kw">eventReactive</span>(input<span class="op">$</span>go, {</span>
+<span id="cb52-10"><a href="user-feedback.html#cb52-10"></a>    <span class="kw">Sys.sleep</span>(<span class="dv">3</span>)</span>
+<span id="cb52-11"><a href="user-feedback.html#cb52-11"></a>    <span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">runif</span>(<span class="dv">50</span>), <span class="dt">y =</span> <span class="kw">runif</span>(<span class="dv">50</span>))</span>
+<span id="cb52-12"><a href="user-feedback.html#cb52-12"></a>  })</span>
+<span id="cb52-13"><a href="user-feedback.html#cb52-13"></a>  </span>
+<span id="cb52-14"><a href="user-feedback.html#cb52-14"></a>  output<span class="op">$</span>plot &lt;-<span class="st"> </span><span class="kw">renderPlot</span>(<span class="kw">plot</span>(<span class="kw">data</span>()), <span class="dt">res =</span> <span class="dv">96</span>)</span>
+<span id="cb52-15"><a href="user-feedback.html#cb52-15"></a>}</span>
+<span id="cb52-16"><a href="user-feedback.html#cb52-16"></a></span>
+<span id="cb52-17"><a href="user-feedback.html#cb52-17"></a><span class="kw">shinyApp</span>(ui, server)</span></code></pre></div>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="graphics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="uploads-and-downloads.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/USERNAME/REPO/edit/BRANCH/08-user-feedback.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["_main.pdf", "_main.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
