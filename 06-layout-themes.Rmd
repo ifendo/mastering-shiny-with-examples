@@ -198,7 +198,7 @@ Some more reference
 
 ## Themes
 
-```{r}
+```{r, eval=FALSE}
 library(shiny)
 library(bslib)
 
