@@ -1,1 +1,937 @@
 # Dynamic UI
+
+:::{.rmdnote}
+
+There are 3 key techniques for creating dynamic user interfaces:
+
++ Using the `update` family of functions to modify parameters of input controls
+
++ Using `tabsetPanel()` to conditionally show and hide parts of the user interface
+
++ Using the `uiOutput()` and `renderUI()` to generate selected parts of the user interface with code
+
+:::
+
+## Updating inputs
+
+```{r,eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("min", "Minimum", 0),
+  numericInput("max", "Maximum", 3),
+  sliderInput("n", "n", min = 0, max = 3, value = 1)
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$min, {
+    updateSliderInput(inputId = "n", min = input$min)
+  })  
+  observeEvent(input$max, {
+    updateSliderInput(inputId = "n", max = input$max)
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+:::{.rmdnote}
+The `updateXXX()` functions: take the name of the input (as a string) as the `inputId` argument. 
+:::
+
+### reset button
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("x1", "x1", 0, min = -10, max = 10),
+  sliderInput("x2", "x2", 0, min = -10, max = 10),
+  sliderInput("x3", "x3", 0, min = -10, max = 10),
+  actionButton("reset", "Reset")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$reset, {
+    updateSliderInput(inputId = "x1", value = 0)
+    updateSliderInput(inputId = "x2", value = 0)
+    updateSliderInput(inputId = "x3", value = 0)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### update button label
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("n", "Simulations", 10),
+  actionButton("simulate", "Simulate")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$n, {
+    label <- paste0("Simulate ", input$n, " times")
+    updateActionButton(inputId = "simulate", label = label)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### hierarchical select boxes
+```{r, eval=FALSE}
+library(vroom)
+library(dplyr)
+library(shiny)
+
+sales <- vroom::vroom("assets/sales_data_sample.csv", col_types = list(), na = "")
+
+ui <- fluidPage(
+  selectInput("territory", "Territory", choices = unique(sales$TERRITORY)),
+  selectInput("customername", "Customer", choices = NULL),
+  selectInput("ordernumber", "Order number", choices = NULL),
+  tableOutput("data")
+)
+
+server <- function(input, output, session) {
+  territory <- reactive({
+    filter(sales, TERRITORY == input$territory)
+  })
+  observeEvent(territory(), {
+    choices <- unique(territory()$CUSTOMERNAME)
+    updateSelectInput(inputId = "customername", choices = choices) 
+  })
+  
+  customer <- reactive({
+    req(input$customername)
+    filter(territory(), CUSTOMERNAME == input$customername)
+  })
+  observeEvent(customer(), {
+    choices <- unique(customer()$ORDERNUMBER)
+    updateSelectInput(inputId = "ordernumber", choices = choices)
+  })
+  
+  output$data <- renderTable({
+    req(input$ordernumber)
+    customer() %>% 
+      filter(ORDERNUMBER == input$ordernumber) %>% 
+      select(QUANTITYORDERED, PRICEEACH, PRODUCTCODE)
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+
+### `freezeReactiveValue()`
+
+before using `freezeReactiveValue`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", "Choose a dataset", c("pressure", "cars")),
+  selectInput("column", "Choose column", character(0)),
+  verbatimTextOutput("summary")
+)
+
+server <- function(input, output, session) {
+  dataset <- reactive(get(input$dataset, "package:datasets"))
+  
+  observeEvent(input$dataset, {
+    updateSelectInput(inputId = "column", choices = names(dataset()))
+  })
+  
+  output$summary <- renderPrint({
+    summary(dataset()[[input$column]])
+  })
+}
+
+shinyApp(ui, server)
+```
+
+after using `freezeReactiveValue`
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("dataset", "Choose a dataset", c("pressure", "cars")),
+  selectInput("column", "Choose column", character(0)),
+  verbatimTextOutput("summary")
+)
+
+server <- function(input, output, session) {
+  dataset <- reactive(get(input$dataset, "package:datasets"))
+  
+  observeEvent(input$dataset, {
+    freezeReactiveValue(input, "column")
+    updateSelectInput(inputId = "column", choices = names(dataset()))
+  })
+  
+  output$summary <- renderPrint({
+    summary(dataset()[[input$column]])
+  })
+}
+
+shinyApp(ui, server)
+```
+
+:::{.rmdnote}
+`freezeReactiveValue` ensures that any reactives or outputs that use the input won't be 
+updated until the next full round of invalidation
+:::
+
+
+### inter-related inputs
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("temp_c", "Celsius", NA, step = 1),
+  numericInput("temp_f", "Fahrenheit", NA, step = 1)
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$temp_f, {
+    c <- round((input$temp_f - 32) * 5 / 9)
+    updateNumericInput(inputId = "temp_c", value = c)
+  })
+  
+  observeEvent(input$temp_c, {
+    f <- round((input$temp_c * 9 / 5) + 32)
+    updateNumericInput(inputId = "temp_f", value = f)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+### Exercises
+
+#### Ex 1
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("year", "year", value = 2020),
+  dateInput("date", "date")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$year, {
+    updateDateInput(inputId = "date", value =paste0(input$year, '-01-01'), min = paste0(input$year,'-01-01'), max = paste0(input$year, '-12-31'))
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 2
+
+```{r, eval=FALSE}
+library(shiny)
+library(openintro)
+
+states <- unique(county$state)
+
+ui <- fluidPage(
+  selectInput("state", "State", choices = states),
+  selectInput("county", "County", choices = NULL)
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$state, {
+    freezeReactiveValue(input, 'county')
+    county_choices <- unique(county[county$state=='Alabama',][['name']])
+    if (input$state %in% c('Louisiana', 'Alaska')) lbl <- 'Parish' else lbl <- 'County'
+    updateSelectInput(inputId = 'county', label = lbl, choices = county_choices )
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 3
+
+```{r, eval=FALSE}
+library(shiny)
+library(gapminder)
+
+continents <- unique(gapminder$continent)
+
+ui <- fluidPage(
+  selectInput("continent", "Continent", choices = continents), 
+  selectInput("country", "Country", choices = NULL),
+  tableOutput("data")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$continent, {
+    freezeReactiveValue(input, 'country')
+    updateSelectInput(inputId = 'country', choices = unique(gapminder[gapminder$continent==input$continent,'country', drop=TRUE]))
+  })
+  
+  output$data <- renderTable({
+    gapminder[gapminder$country==input$country,]
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 4
+
+```{r, eval=FALSE}
+library(shiny)
+library(gapminder)
+
+continents <- as.character(unique(gapminder$continent))
+
+ui <- fluidPage(
+  selectInput("continent", "Continent", choices = c('All', continents)), 
+  selectInput("country", "Country", choices = NULL),
+  tableOutput("data")
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$continent, {
+    freezeReactiveValue(input, 'country')
+    if (input$continent == 'All') {
+      countries <- unique(gapminder[['country']])
+      countries <- c('All', as.character(countries))
+    } else countries <- unique(gapminder[gapminder$continent==input$continent,'country', drop=TRUE])
+    updateSelectInput(inputId = 'country', choices = countries)
+  })
+  
+  output$data <- renderTable({
+    if (input$country == 'All') {
+      gapminder
+    } else gapminder[gapminder$country==input$country,]
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 5
+
+circular references
+
+
+## Dynamic visibility
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("controller", "Show", choices = paste0("panel", 1:3))
+    ),
+    mainPanel(
+      tabsetPanel(
+        id = "switcher",
+        type = "hidden",
+        tabPanelBody("panel1", "Panel 1 content"),
+        tabPanelBody("panel2", "Panel 2 content"),
+        tabPanelBody("panel3", "Panel 3 content")
+      )
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$controller, {
+    updateTabsetPanel(inputId = "switcher", selected = input$controller)
+  })
+}
+
+shinyApp(ui, server)
+
+```
+
+### Conditional UI
+
+```{r, eval=FALSE}
+library(shiny)
+
+parameter_tabs <- tabsetPanel(
+  id = "params",
+  type = "hidden",
+  tabPanel("normal",
+    numericInput("mean", "mean", value = 1),
+    numericInput("sd", "standard deviation", min = 0, value = 1)
+  ),
+  tabPanel("uniform", 
+    numericInput("min", "min", value = 0),
+    numericInput("max", "max", value = 1)
+  ),
+  tabPanel("exponential",
+    numericInput("rate", "rate", value = 1, min = 0),
+  )
+)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("dist", "Distribution", 
+        choices = c("normal", "uniform", "exponential")
+      ),
+      numericInput("n", "Number of samples", value = 100),
+      parameter_tabs,
+    ),
+    mainPanel(
+      plotOutput("hist")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$dist, {
+    updateTabsetPanel(inputId = "params", selected = input$dist)
+  }) 
+  
+  sample <- reactive({
+    switch(input$dist,
+      normal = rnorm(input$n, input$mean, input$sd),
+      uniform = runif(input$n, input$min, input$max),
+      exponential = rexp(input$n, input$rate)
+    )
+  })
+  output$hist <- renderPlot(hist(sample()), res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+
+### Wizard interface
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  tabsetPanel(
+    id = "wizard",
+    type = "hidden",
+    tabPanel("page_1", 
+      "Welcome!",
+      actionButton("page_12", "next")
+    ),
+    tabPanel("page_2", 
+      "Only one page to go",
+      actionButton("page_21", "prev"),
+      actionButton("page_23", "next")
+    ),
+    tabPanel("page_3", 
+      "You're done!",
+      actionButton("page_32", "prev")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  switch_page <- function(i) {
+    updateTabsetPanel(inputId = "wizard", selected = paste0("page_", i))
+  }
+  
+  observeEvent(input$page_12, switch_page(2))
+  observeEvent(input$page_21, switch_page(1))
+  observeEvent(input$page_23, switch_page(3))
+  observeEvent(input$page_32, switch_page(2))
+}
+
+shinyApp(ui, server)
+```
+
+### Exercises
+
+#### Ex 1
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  tabsetPanel(
+    tabPanel(
+      'User Selection',
+      selectInput('s1', 'Select one', choices = c('a','b','c')),
+      checkboxInput('c1', 'advanced')
+      # actionButton('b1', 'click me')
+    ),
+    tabPanel(
+      title = 'Tab 2',
+      h1('tab 2')
+    ),
+    id = 'tabs',
+    type = 'hidden'
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$c1, {
+    if (input$c1) updateTabsetPanel(inputId = 'tabs', selected = 'Tab 2')
+  })
+  
+  # observe(print(input$s1))
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 2
+
+```{r, eval=FALSE}
+library(shiny)
+library(ggplot2)
+
+plot_tabs <- tabsetPanel(
+  id = "plots",
+  type = "hidden",
+  tabPanel("histogram",
+    numericInput("hbinw", "binwidth", value = 0.1, min=0, max=1, step = 0.1)
+  ),
+  tabPanel("freqpoly", 
+    numericInput("fbinw", "binwidth", value = 0.1, min=0, max=1, step = 0.1)
+  ),
+  tabPanel("density",
+    numericInput("bw", "bw", value = 0.1, min=0, max=1, step = 0.1)
+  )
+)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("type", "Plot Type", 
+        choices = c("histogram", "freqpoly", "density")
+      ),
+      plot_tabs,
+    ),
+    mainPanel(
+      plotOutput("plot")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$type, {
+    updateTabsetPanel(inputId = "plots", selected = input$type)
+  }) 
+  
+  output$plot <- renderPlot({
+    p <- ggplot(diamonds, aes(carat))
+
+    if (input$type == 'histogram') p + geom_histogram(binwidth = input$hbinw)
+    else if (input$type == 'freqpoly') p + geom_freqpoly(binwidth = input$fbinw)
+    else if (input$type == 'density') p + geom_density(bw = input$bw)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 3
+
+```{r, eval=FALSE}
+library(shiny)
+library(ggplot2)
+
+plot_tabs <- tabsetPanel(
+  id = "plots",
+  type = "hidden",
+  tabPanel("histogram",
+    numericInput("hbinw", "binwidth", value = 0.1, min=0, max=1, step = 0.1)
+  ),
+  tabPanel("freqpoly", 
+    numericInput("fbinw", "binwidth", value = 0.1, min=0, max=1, step = 0.1)
+  ),
+  tabPanel("density",
+    numericInput("bw", "bw", value = 0.1, min=0, max=1, step = 0.1)
+  )
+)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("type", "Plot Type", 
+        choices = c("histogram", "freqpoly", "density")
+      ),
+      plot_tabs,
+      checkboxGroupInput('cb','Show plot(s)', choices = c("histogram", "freqpoly", "density"))
+    ),
+    mainPanel(
+      plotOutput("plot")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$type, {
+    updateTabsetPanel(inputId = "plots", selected = input$type)
+  }) 
+  
+  output$plot <- renderPlot({
+    p <- ggplot(diamonds, aes(carat))
+
+    if ('histogram' %in% input$cb) p <- p + geom_histogram(binwidth = input$hbinw)
+    if ('freqpoly' %in% input$cb) p <- p + geom_freqpoly(binwidth = input$fbinw)
+    if ('density' %in% input$cb) p <- p + geom_density(bw = input$bw)
+    
+    p
+  })
+
+}
+
+shinyApp(ui, server)
+```
+
+## Creating UI with code
+
+### Getting started
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textInput("label", "label"),
+  selectInput("type", "type", c("slider", "numeric")),
+  uiOutput("numeric")
+)
+server <- function(input, output, session) {
+  output$numeric <- renderUI({
+    if (input$type == "slider") {
+      sliderInput("dynamic", input$label, value = 0, min = 0, max = 10)
+    } else {
+      numericInput("dynamic", input$label, value = 0, min = 0, max = 10) 
+    }
+  })
+}
+
+shinyApp(ui, server)
+```
+
+:::{.rmdwarning}
+`renderUI`: relying on it too much can create a laggy UI
+:::
+
+
+### Multiple controls
+
+```{r, eval=FALSE}
+library(shiny)
+library(purrr)
+
+ui <- fluidPage(
+  numericInput("n", "Number of colours", value = 5, min = 1),
+  uiOutput("col"),
+  textOutput("palette")
+)
+
+server <- function(input, output, session) {
+  col_names <- reactive(paste0("col", seq_len(input$n)))
+  
+  output$col <- renderUI({
+    map(col_names(), ~ textInput(.x, NULL))
+  })
+  
+  output$palette <- renderText({
+    map_chr(col_names(), ~ input[[.x]] %||% "")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+:::{.rmdimportant}
+the use of `isolate()` and `barplot()` in below example
+:::
+
+```{r, eval=FALSE}
+library(shiny)
+library(purrr)
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      numericInput("n", "Number of colours", value = 5, min = 1),
+      uiOutput("col"),
+    ),
+    mainPanel(
+      plotOutput("plot")  
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  col_names <- reactive(paste0("col", seq_len(input$n)))
+  
+  output$col <- renderUI({
+    map(col_names(), ~ textInput(.x, NULL, value = isolate(input[[.x]])))
+  })
+  
+  output$plot <- renderPlot({
+    cols <- map_chr(col_names(), ~ input[[.x]] %||% "")
+    # convert empty inputs to transparent
+    cols[cols == ""] <- NA
+    
+    barplot(
+      rep(1, length(cols)), 
+      col = cols,
+      space = 0, 
+      axes = FALSE
+    )
+  }, res = 96)
+}
+
+shinyApp(ui, server)
+```
+
+### Dynamic filtering
+
+```{r, eval=FALSE}
+library(shiny)
+
+make_ui <- function(x, var) {
+  if (is.numeric(x)) {
+    rng <- range(x, na.rm = TRUE)
+    sliderInput(var, var, min = rng[1], max = rng[2], value = rng)
+  } else if (is.factor(x)) {
+    levs <- levels(x)
+    selectInput(var, var, choices = levs, selected = levs, multiple = TRUE)
+  } else {
+    # Not supported
+    NULL
+  }
+}
+
+filter_var <- function(x, val) {
+  if (is.numeric(x)) {
+    !is.na(x) & x >= val[1] & x <= val[2]
+  } else if (is.factor(x)) {
+    x %in% val
+  } else {
+    # No control, so don't filter
+    TRUE
+  }
+}
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      make_ui(iris$Sepal.Length, "Sepal.Length"),
+      make_ui(iris$Sepal.Width, "Sepal.Width"),
+      make_ui(iris$Species, "Species")
+    ),
+    mainPanel(
+      tableOutput("data")
+    )
+  )
+)
+server <- function(input, output, session) {
+  selected <- reactive({
+    filter_var(iris$Sepal.Length, input$Sepal.Length) &
+      filter_var(iris$Sepal.Width, input$Sepal.Width) &
+      filter_var(iris$Species, input$Species)
+  })
+  
+  output$data <- renderTable(head(iris[selected(), ], 12))
+}
+
+shinyApp(ui, server)
+```
+
+for all columns in `iris`
+
+```{r}
+library(shiny)
+library(purrr)
+
+make_ui <- function(x, var) {
+  if (is.numeric(x)) {
+    rng <- range(x, na.rm = TRUE)
+    sliderInput(var, var, min = rng[1], max = rng[2], value = rng)
+  } else if (is.factor(x)) {
+    levs <- levels(x)
+    selectInput(var, var, choices = levs, selected = levs, multiple = TRUE)
+  } else {
+    # Not supported
+    NULL
+  }
+}
+
+filter_var <- function(x, val) {
+  if (is.numeric(x)) {
+    !is.na(x) & x >= val[1] & x <= val[2]
+  } else if (is.factor(x)) {
+    x %in% val
+  } else {
+    # No control, so don't filter
+    TRUE
+  }
+}
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      map(names(iris), ~ make_ui(iris[[.x]], .x))
+    ),
+    mainPanel(
+      tableOutput("data")
+    )
+  )
+)
+server <- function(input, output, session) {
+  selected <- reactive({
+    each_var <- map(names(iris), ~ filter_var(iris[[.x]], input[[.x]]))
+    reduce(each_var, ~ .x & .y)
+  })
+  
+  output$data <- renderTable(head(iris[selected(), ], 12))
+}
+
+shinyApp(ui, server)
+```
+
+for any dataframes in `datasets` package
+
+```{r}
+library(shiny)
+library(purrr)
+
+make_ui <- function(x, var) {
+  if (is.numeric(x)) {
+    rng <- range(x, na.rm = TRUE)
+    sliderInput(var, var, min = rng[1], max = rng[2], value = rng)
+  } else if (is.factor(x)) {
+    levs <- levels(x)
+    selectInput(var, var, choices = levs, selected = levs, multiple = TRUE)
+  } else {
+    # Not supported
+    NULL
+  }
+}
+
+filter_var <- function(x, val) {
+  if (is.numeric(x)) {
+    !is.na(x) & x >= val[1] & x <= val[2]
+  } else if (is.factor(x)) {
+    x %in% val
+  } else {
+    # No control, so don't filter
+    TRUE
+  }
+}
+
+dfs <- keep(ls("package:datasets"), ~ is.data.frame(get(.x, "package:datasets")))
+
+ui <- fluidPage(
+  sidebarLayout(
+    sidebarPanel(
+      selectInput("dataset", label = "Dataset", choices = dfs),
+      uiOutput("filter")
+    ),
+    mainPanel(
+      tableOutput("data")
+    )
+  )
+)
+server <- function(input, output, session) {
+  data <- reactive({
+    get(input$dataset, "package:datasets")
+  })
+  vars <- reactive(names(data()))
+  
+  output$filter <- renderUI(
+    map(vars(), ~ make_ui(data()[[.x]], .x))
+  )
+  
+  selected <- reactive({
+    each_var <- map(vars(), ~ filter_var(data()[[.x]], input[[.x]]))
+    reduce(each_var, `&`)
+  })
+  
+  output$data <- renderTable(head(data()[selected(), ], 12))
+}
+
+shinyApp(ui, server)
+```
+
+### Exercises
+
+#### Ex 1
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput('type', 'type', c('slider', 'numeric')),
+  tabsetPanel(
+    id = 'uis',
+    type = 'hidden',
+    tabPanel(
+      'slider',
+      sliderInput('n1', 'n', value = 0, min = 0, max = 100)
+    ),
+    tabPanel(
+      'numeric',
+      sliderInput('n2', 'n', value = 0, min = 0, max = 100)
+    ),
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$type, {
+    updateTabsetPanel(inputId = 'uis', selected = input$type)
+  })
+  
+  observeEvent(input$n1, {
+    updateSliderInput(inputId = 'n2', value = input$n1)
+  })
+
+  observeEvent(input$n2, {
+    updateSliderInput(inputId = 'n1', value = input$n2)
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 2
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("go", "Enter password"),
+  textOutput("text")
+)
+server <- function(input, output, session) {
+  observeEvent(input$go, {
+    showModal(modalDialog(
+      passwordInput("password", NULL, value = isolate(input$password)),
+      title = "Please enter your password"
+    ))
+  })
+
+  output$text <- renderText({
+    if (!isTruthy(input$password)) {
+      "No password"
+    } else {
+      "Password entered"
+    }
+  })
+}
+
+shinyApp(ui, server)
+```
+

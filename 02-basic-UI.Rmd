@@ -181,9 +181,11 @@ server <- function(input, output, session) {
 shinyApp(ui, server)
 ```
 
+:::{.rmdnote}
 Plots are special because they are outputs that **can also act as inputs**. 
 
 plotOutput() has a number of arguments like `click`, `dblclick`, and `hover`. If you pass these a string, like click = "plot_click", they’ll create a reactive input (input$plot_click) that you can use to handle user interaction on the plot.
+:::
 
 ### Exercises
 

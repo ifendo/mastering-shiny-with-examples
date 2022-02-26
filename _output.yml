@@ -1,6 +1,6 @@
 bookdown::bs4_book:
   theme:
     primary: "#1c75bc"
-  repo: https://github.com/ifendo/mastering-shiny-with-examples.git
+  repo: https://github.com/ifendo/mastering-shiny-with-examples
   includes:
     in_header: [ga_script.html]
