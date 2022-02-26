@@ -752,7 +752,7 @@ shinyApp(ui, server)
 
 for all columns in `iris`
 
-```{r}
+```{r, eval=FALSE}
 library(shiny)
 library(purrr)
 
@@ -804,7 +804,7 @@ shinyApp(ui, server)
 
 for any dataframes in `datasets` package
 
-```{r}
+```{r, eval=FALSE}
 library(shiny)
 library(purrr)
 
