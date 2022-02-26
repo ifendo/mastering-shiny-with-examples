@@ -17,6 +17,11 @@ github-repo: ifendo/mastering-shiny-with-examples
 
 This is the book I used to extract and capture the executable code examples of `Mastering Shiny` book for my personal practice and testing.
 
+```{r include=FALSE}
+library(downlit)
+library(xml2)
+```
+
 ## Mastering-Shiny by Hadley Wickham {.unnumbered}
 
 [Mastering-Shiny](https://mastering-shiny.org/index.html)
