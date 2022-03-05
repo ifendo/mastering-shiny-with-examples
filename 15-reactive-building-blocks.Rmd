@@ -1,0 +1,72 @@
+# Reactive building blocks
+
+## Introduction
+
+There are 3 fundamental building blocks of reactive programming:
+
++ reactive values
++ reactive expressions
++ observers
+
+## Reactive values
+
++ A single reactive value, created by `reactiveVal()`
++ A list of reactive values, created by `reactiveValues()`
+
+## Reactive expressions
+
+### Errors
+
+:::{.rmdimportant}
+Reactive expressions cache errors in exactly the same way that they cache values
+
+```{r, eval=FALSE}
+library(shiny)
+reactiveConsole(TRUE)
+
+r <- reactive(stop('Error occured at ', Sys.time(), call. = FALSE))
+
+r()
+
+# wait 2 seconds
+Sys.sleep(2)
+r()
+```
+:::
+
+:::{.rmdcaution}
+Errors are also treated the same way as values when it comes to the reactive graph: errors propagate through the reactive graph exactly the same way as regular values. The only difference is what happens when an error hits an output or observer:
+
++ An error in an output will be displayed in the app
++ An error in ab observer will cause the current session to terminate. If you don't want this to happen, you'll need to wrap the code in `try()` or `tryCatch()`
+
+:::
+
+## Observers and outputs
+
+Observers and outputs differ from reactive expressions in two important ways:
+
++ They are eager and forgetful - they run as soon as they possibly can and they don't remember their previous action. 
++ The value returned by an observer is ignored because they are designed to work with functions called for their side-effects, like `cat()` or `write.csv()`
+
+## Isolating code
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  numericInput("x", "x", value = 50, min = 0, max = 100),
+  actionButton("capture", "capture"),
+  textOutput("out")
+)
+
+server <- function(input, output, session) {
+  x <- eventReactive(input$capture, input$x)
+
+  output$out <- renderText({
+    x()
+  })
+}
+
+shinyApp(ui, server)
+```

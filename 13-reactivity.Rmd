@@ -1,0 +1,86 @@
+# Why reactivity?
+
+## Why do we need reactive programming?
+
+`Reactive programming` is a style of programming that focuses on values that change over time, and calculations and actions that depend on those values. 
+
+For Shiny apps to be maximally useful, we need reactive expressions and outputs to update if and only if their inputs change.
+
+## Event-driven programming
+
+```{r, eval=FALSE}
+DynamicValue <- R6::R6Class("DynamicValue", list(
+  value = NULL,
+  on_update = NULL,
+
+  get = function() self$value,
+
+  set = function(value) {
+    self$value <- value
+    if (!is.null(self$on_update)) 
+      self$on_update(value)
+    invisible(self)
+  },
+  
+  onUpdate = function(on_update) {
+    self$on_update <- on_update
+    invisible(self)
+  }
+))
+```
+
+```{r, eval=FALSE}
+temp_c <- DynamicValue$new()
+temp_c$onUpdate(function(value) {
+  message("Converting") 
+  temp_f <<- (value * 9 / 5) + 32
+})
+
+temp_c$set(10)
+
+# check value of temp_f
+temp_f # returns 50
+
+# update temp_c
+temp_c$set(-3)
+
+# check value of temp_f again
+temp_f # returns 26.6
+```
+
+## Reactive programming
+
+```{r, eval=FALSE}
+library(shiny)
+reactiveConsole(TRUE)
+
+# create a reactive value
+temp_c <- reactiveVal(10)
+
+# get its value
+temp_c() 
+
+# set its value
+temp_c(20)
+
+temp_c() # check its current value
+```
+
+create a reactive expression that depends on `temp_c` value:
+
+```{r, eval=FALSE}
+temp_f <- reactive({
+  message("Converting")
+  (temp_c() * 9 / 5) + 32
+})
+
+temp_f() # get its current value
+```
+
+:::{.rmdnote}
+A reactive expression has two important properties:
+
++ It's lazy: it doesn't do any work until it's called.
++ It's cached: it doesn't do any work the second and subsequent times it's called because it caches the previous result.
+:::
+

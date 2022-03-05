@@ -1,0 +1,251 @@
+# Escaping the graph
+
+## Introduction
+
+We can combine `reactiveValues()` and `observe()`/`observeEvent()` to connect the right hand side of the reactive graph back to the left hand side.
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textInput('nm', 'name'),
+  actionButton('clr', 'Clear'),
+  textOutput('hi')
+)
+
+server <- function(input, output, session) {
+  output$hi <- renderText(paste0('hi ', input$nm))
+
+  observeEvent(input$clr, {
+    updateTextInput(session, 'nm', value='')
+  })
+}
+
+shinyApp(ui, server)
+```
+## Case studies
+
+### One output modified by multiple inputs 
+
+:::{.rmdimportant}
+reactiveValues()
+:::
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("drink", "drink me"),
+  actionButton("eat", "eat me"),
+  textOutput("notice")
+)
+server <- function(input, output, session) {
+  r <- reactiveValues(notice = "")
+  observeEvent(input$drink, {
+    r$notice <- "You are no longer thirsty"
+  })
+  observeEvent(input$eat, {
+    r$notice <- "You are no longer hungry"
+  })
+  output$notice <- renderText(r$notice)
+}
+
+shinyApp(ui, server)
+```
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("up", "up"),
+  actionButton("down", "down"),
+  textOutput("n")
+)
+server <- function(input, output, session) {
+  r <- reactiveValues(n = 0)
+  observeEvent(input$up, {
+    r$n <- r$n + 1
+  })
+  observeEvent(input$down, {
+    r$n <- r$n - 1
+  })
+  
+  output$n <- renderText(r$n)
+}
+
+shinyApp(ui, server)
+```
+
+### Accumulating inputs
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "name"),
+  actionButton("add", "add"),
+  textOutput("names")
+)
+server <- function(input, output, session) {
+  r <- reactiveValues(names = character())
+  observeEvent(input$add, {
+    r$names <- c(input$name, r$names)
+    updateTextInput(session, "name", value = "")
+  })
+  
+  output$names <- renderText(r$names)
+}
+
+shinyApp(ui, server)
+```
+
+### Deleting inputs
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textInput("name", "name"),
+  actionButton("add", "add"),
+  actionButton("del", "delete"),
+  textOutput("names")
+)
+server <- function(input, output, session) {
+  r <- reactiveValues(names = character())
+  observeEvent(input$add, {
+    r$names <- union(r$names, input$name)
+    updateTextInput(session, "name", value = "")
+  })
+  
+  observeEvent(input$del, {
+    r$names <- setdiff(r$names, input$name)
+    updateTextInput(session, "name", value = "")
+  })
+  
+  output$names <- renderText(r$names)
+}
+
+shinyApp(ui, server)
+```
+
+### Pausing animations
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("start", "start"),
+  actionButton("stop", "stop"),
+  textOutput("n")
+)
+server <- function(input, output, session) {
+  r <- reactiveValues(running = FALSE, n = 0)
+
+  observeEvent(input$start, {
+    r$running <- TRUE
+  })
+  observeEvent(input$stop, {
+    r$running <- FALSE
+  })
+  
+  observe({
+    if (r$running) {
+      r$n <- isolate(r$n) + 1
+      invalidateLater(250)
+    }
+  })
+  output$n <- renderText(r$n)
+}
+
+shinyApp(ui, server)
+```
+
+### Exercises
+
+#### Ex 1
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  actionButton("rnorm", "Normal"),
+  actionButton("runif", "Uniform"),
+  plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+  r <- reactiveValues(fun="")
+
+  observeEvent(input$rnorm, {
+    r$fun <- 'rnorm'
+  })
+  observeEvent(input$runif, {
+    r$fun <- 'runif'
+  })
+
+  observe(print(r$fun))
+  
+  output$plot <- renderPlot({
+    req(r$fun)
+    hist(get(r$fun)(100))
+  })
+}
+
+shinyApp(ui, server)
+```
+#### Ex 2
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("type", "type", c("Normal", "Uniform")),
+  actionButton("go", "go"),
+  plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+  r <- reactiveValues(fun="rnorm")
+
+  observeEvent(input$go, {
+    if (input$type == 'Normal') r$fun <- 'rnorm'
+    else if (input$type == 'Uniform') r$fun <- 'runif'
+  })
+
+  observe(print(r$fun))
+  
+  output$plot <- renderPlot({
+    req(input$go)
+    hist(get(r$fun)(100))
+  })
+}
+
+shinyApp(ui, server)
+```
+
+#### Ex 3
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  selectInput("type", "type", c("Normal", "Uniform")),
+  actionButton("go", "go"),
+  plotOutput("plot")
+)
+
+server <- function(input, output, session) {
+  r <- eventReactive(input$go, {
+    if (input$type == 'Normal') 'rnorm'
+    else if (input$type == 'Uniform') 'runif'
+  })
+
+  # observeEvent(input$go, {
+    output$plot <- renderPlot({
+      hist(get(r())(100))
+    })
+  # })
+}
+
+shinyApp(ui, server)
+```
