@@ -1,0 +1,40 @@
+# Functions
+
+## UI Functions
+
+Functions are a powerful tool to reduce duplication in your UI code.
+
+```{r, eval=FALSE}
+sliderInput01 <- function(id) {
+    sliderInput(id, label = id, min = 0, max = 1, value = 0.5, step = 0.1)
+}
+
+ui <- fluidRow(
+    sliderInput01("alpha"),
+    sliderInput01("beta"),
+    sliderInput01("gamma"),
+    sliderInput01("delta")
+)
+```
+
+### functional programming
+
+```{r}
+library(purrr)
+library(shiny)
+vars <- c("alpha", "beta", "gamma", "delta")
+
+sliderInput01 <- function(id) {
+    sliderInput(id, label = id, min = 0, max = 1, value = 0.5, step = 0.1)
+}
+sliders <- map(vars, sliderInput01)
+ui <- fluidRow(sliders)
+```
+
+## Server function
+
+Whenever you have a long reactive (say > 10 lines), you should consider pulling it out into a separate function that does not use any reactivity.
+
++ It is much easier to debug and test your code if you can partition it so that reactivity lives inside of `server()`, and complex computation lives in your functions.
++ When looking at a reactive expression or output, there's no way to easily tell exactly what values if depends on, except by carefully reading the code block. A function definition, however, tells you exactly what the inputs are.
+

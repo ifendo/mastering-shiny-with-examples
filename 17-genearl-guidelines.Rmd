@@ -1,0 +1,15 @@
+# General guidenlines
+
+:::{.rmdimportant}
+Most people go through the same evolution when learing a new technique:
+
++ I don't understand it and have to look it up every time I use it =>
++ I vaguely understand it but still read the documentation a lot =>
++ I understand it and can use it fluidly
+:::
+
+## Dependency management
+
+- renv
+- config
+

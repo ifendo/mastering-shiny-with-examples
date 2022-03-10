@@ -1,0 +1,379 @@
+# Shiny modules
+
+The magic of modules comes because these functions are constructed in a special way that creates a "namespace".
+
+Shiny modules have two big advantages:
+
++ namespacing makes it easier to understand how your app works because you can write, analyse, and test individual components in isolation.
++ modules are functions they help you reuse
+
+## Module basics
+
+```{r, eval=FALSE}
+library(shiny)
+ui <- fluidPage(
+    selectInput("var", "Variable", names(mtcars)),
+    numericInput("bins", "bins", 10, min = 1),
+    plotOutput("hist")
+)
+server <- function(input, output, session) {
+    data <- reactive(mtcars[[input$var]])
+    output$hist <- renderPlot(
+        {
+            hist(data(), breaks = input$bins, main = input$var)
+        },
+        res = 96
+    )
+}
+shinyApp(ui, server)
+```
+
+### module UI
+
+```{r, eval=FALSE}
+histogramUI <- function(id) {
+    tagList(
+        selectInput(NS(id, "var"), "Variables", choices = names(mtcars)),
+        numericInput(NS(id, "bins"), "bins", value = 10, min = 1),
+        plotOutput(NS(id, "hist"))
+    )
+}
+```
+
+### module server
+
+```{r, eval=FALSE}
+histogramServer <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        data <- reactive(mtcars[[input$var]])
+        output$hist <- renderPlot(
+            {
+                hist(data(), breaks = input$bins, main = input$var)
+            },
+            res = 96
+        )
+    })
+}
+```
+
+updated App
+
+```{r}
+histogramApp <- function() {
+    ui <- fulidPage(
+        histgoramUI("hist1")
+    )
+
+    server <- function(input, output, session) {
+        histogramServer("hist1")
+    }
+
+    shinyApp(ui, server)
+}
+```
+
+## module server inputs and outputs
+
+Question: how module server can take additional reactive inputs and return one or more reactive outputs?
+
+Connecting modules together requires you to be explicit about inputs and outputs
+
+
+```{r, eval=FALSE}
+library(shiny)
+
+datasetInput <- function(id, filter = NULL) {
+    names <- ls("package:datasets")
+    if (!is.null(filter)) {
+        data <- lapply(names, get, "package:datasets")
+        names <- names[vapply(data, filter, logical(1))]
+    }
+
+    selectInput(NS(id, "dataset"), "Pick a dataset", choices = names)
+}
+
+datasetServer <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        reactive(get(input$dataset, "package:datasets"))
+    })
+}
+
+datasetApp <- function(filter = NULL) {
+    ui <- fluidPage(
+        datasetInput("dataset", filter = filter),
+        tableOutput("data")
+    )
+    server <- function(input, output, session) {
+        data <- datasetServer("dataset")
+        output$data <- renderTable(head(data()))
+    }
+    shinyApp(ui, server)
+}
+```
+
+### Add variable selection
+
+```{r, eval=FALSE}
+library(shiny)
+
+datasetInput <- function(id, filter = NULL) {
+    names <- ls("package:datasets")
+    if (!is.null(filter)) {
+        data <- lapply(names, get, "package:datasets")
+        names <- names[vapply(data, filter, logical(1))]
+    }
+
+    selectInput(NS(id, "dataset"), "Pick a dataset", choices = names)
+}
+
+datasetServer <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        reactive(get(input$dataset, "package:datasets"))
+    })
+}
+
+# select variable UI
+selectVarInput <- function(id) {
+    selectInput(NS(id, "var"), "Variable", choices = NULL)
+}
+
+# select variable server: helper function
+find_vars <- function(data, filter) {
+    names(data)[vapply(data, filter, logical(1))]
+}
+
+# select variable server
+selectVarServer <- function(id, data, filter = is.numeric) {
+    moduleServer(id, function(input, output, session) {
+        observeEvent(data(), {
+            updateSelectInput(session, "var", choices = find_vars(data(), filter))
+        })
+
+        reactive(data()[[input$var]])
+    })
+}
+
+# the updated App: with variable selection included
+selectVarApp <- function(filter = is.numeric) {
+    ui <- fluidPage(
+        datasetInput("data", is.data.frame),
+        selectVarInput("var"),
+        verbatimTextOutput("out")
+    )
+
+    server <- function(input, output, session) {
+        data <- datasetServer("data")
+        var <- selectVarServer("var", data, filter = filter)
+
+        output$out <- renderPrint(var())
+    }
+
+    shinyApp(ui, server)
+}
+```
+
+## Server inputs
+
+When designing a module server, we need to think about who is going to provide the value for each argument:
+
++ is it fixed and constant over the life-time of the app?
++ or is it reactive, changing as the user interacts with the app?
+
+Once we've made this decision, it's good practice to check that each input to the server module is either reactive or constant.
+
+### updated version of `selectVarServer()`
+
+```{r, eval=FALSE}
+selectVarServer <- function(id, data, filter = is.numeric) {
+    stopifnot(is.reactive(data))
+    stopifnot(!is.reactive(filter))
+
+    moduleServer(id, function(input, output, session) {
+        observeEvent(data(), {
+            updateSelectInput(session, "var", choices = find_vars(data(), filter))
+        })
+
+        reactive(data()[[input$var]])
+    })
+}
+```
+
+### Modules inside of modules
+
+```{r, eval=FALSE}
+library(shiny)
+
+datasetInput <- function(id, filter = NULL) {
+    names <- ls("package:datasets")
+    if (!is.null(filter)) {
+        data <- lapply(names, get, "package:datasets")
+        names <- names[vapply(data, filter, logical(1))]
+    }
+
+    selectInput(NS(id, "dataset"), "Pick a dataset", choices = names)
+}
+
+datasetServer <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        reactive(get(input$dataset, "package:datasets"))
+    })
+}
+
+# select variable UI
+selectVarInput <- function(id) {
+    selectInput(NS(id, "var"), "Variable", choices = NULL)
+}
+
+# select variable server: helper function
+find_vars <- function(data, filter) {
+    names(data)[vapply(data, filter, logical(1))]
+}
+
+# select variable server
+selectVarServer <- function(id, data, filter = is.numeric) {
+    stopifnot(is.reactive(data))
+    stopifnot(!is.reactive(filter))
+
+    moduleServer(id, function(input, output, session) {
+        observeEvent(data(), {
+            updateSelectInput(session, "var", choices = find_vars(data(), filter))
+        })
+
+        reactive(data()[[input$var]])
+    })
+}
+
+selectDataVarUI <- function(id) {
+    tagList(
+        datasetInput(NS(id, "data"), filter = is.data.frame),
+        selectVarInput(NS(id, "var"))
+    )
+}
+
+selectDataVarServer <- function(id, filter = is.numeric) {
+    moduleServer(id, function(input, output, session) {
+        data <- datasetServer("data")
+        var <- selectVarServer("var", data, filter = filter)
+
+        var
+    })
+}
+
+selectDataVarApp <- function(filter = is.numeric) {
+    ui <- fluidPage(
+        sidebarLayout(
+            sidebarPanel(selectDataVarUI("var")),
+            mainPanel(verbatimTextOutput("out"))
+        )
+    )
+
+    server <- function(input, output, session) {
+        var <- selectDataVarServer("var", filter)
+
+        output$out <- renderPrint(var(), width = 40)
+    }
+
+    shinyApp(ui, server)
+}
+```
+
+
+
+### histgoram example
+
+```{r, eval=FALSE}
+library(shiny)
+
+datasetInput <- function(id, filter = NULL) {
+    names <- ls("package:datasets")
+    if (!is.null(filter)) {
+        data <- lapply(names, get, "package:datasets")
+        names <- names[vapply(data, filter, logical(1))]
+    }
+
+    selectInput(NS(id, "dataset"), "Pick a dataset", choices = names)
+}
+
+datasetServer <- function(id) {
+    moduleServer(id, function(input, output, session) {
+        reactive(get(input$dataset, "package:datasets"))
+    })
+}
+
+# select variable UI
+selectVarInput <- function(id) {
+    selectInput(NS(id, "var"), "Variable", choices = NULL)
+}
+
+# select variable server: helper function
+find_vars <- function(data, filter) {
+    names(data)[vapply(data, filter, logical(1))]
+}
+
+# select variable server
+selectVarServer <- function(id, data, filter = is.numeric) {
+    stopifnot(is.reactive(data))
+    stopifnot(!is.reactive(filter))
+
+    moduleServer(id, function(input, output, session) {
+        observeEvent(data(), {
+            updateSelectInput(session, "var", choices = find_vars(data(), filter))
+        })
+
+        reactive(data()[[input$var]])
+    })
+}
+
+# histogram example
+
+histogramOutput <- function(id) {
+    tagList(
+        numericInput(NS(id, "bins"), "bins", 10, min = 1, step = 1),
+        plotOutput(NS(id, "hist"))
+    )
+}
+
+# x: variable to plot
+# tilte: title for the histogram
+histogramServer <- function(id, x, title = reactive("Histogram")) {
+    stopifnot(is.reactive(x))
+    stopifnot(is.reactive(title))
+
+    moduleServer(id, function(input, output, session) {
+        output$hist <- renderPlot(
+            {
+                main <- paste0(title(), " [", input$bins, "]")
+                hist(x(), breaks = input$bins, main = main)
+            },
+            res = 96
+        )
+    })
+}
+
+histogramApp <- function() {
+    ui <- fluidPage(
+        sidebarLayout(
+            sidebarPanel(
+                datasetInput("data", is.data.frame),
+                selectVarInput("var")
+            ),
+            mainPanel(
+                histogramOutput("hist")
+            )
+        ),
+    )
+
+    server <- function(input, output, session) {
+        data <- datasetServer("data")
+        x <- selectVarServer("var", data)
+
+        histogramServer("hist", x)
+    }
+
+    shinyApp(ui, server)
+}
+```
+
+:::{.rmdimportant}
+When passing an argument to a module, you want the module to react to the value changing which means that you have to pass the reactive, not its **current value**.
+:::
