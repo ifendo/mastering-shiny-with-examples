@@ -4,16 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 13 Reactive building blocks | Mastering Shiny with Examples</title>
+<title>Chapter 15 Reactive building blocks | Mastering Shiny with Examples</title>
 <meta name="author" content="Jie Wang">
-<meta name="description" content="13.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  13.2 Reactive values A single reactive value, created by...">
-<meta name="generator" content="bookdown 0.24.10 with bs4_book()">
-<meta property="og:title" content="Chapter 13 Reactive building blocks | Mastering Shiny with Examples">
+<meta name="description" content="15.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  15.2 Reactive values A single reactive value, created by...">
+<meta name="generator" content="bookdown 0.26.3 with bs4_book()">
+<meta property="og:title" content="Chapter 15 Reactive building blocks | Mastering Shiny with Examples">
 <meta property="og:type" content="book">
-<meta property="og:description" content="13.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  13.2 Reactive values A single reactive value, created by...">
+<meta property="og:description" content="15.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  15.2 Reactive values A single reactive value, created by...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 13 Reactive building blocks | Mastering Shiny with Examples">
-<meta name="twitter:description" content="13.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  13.2 Reactive values A single reactive value, created by...">
+<meta name="twitter:title" content="Chapter 15 Reactive building blocks | Mastering Shiny with Examples">
+<meta name="twitter:description" content="15.1 Introduction There are 3 fundamental building blocks of reactive programming: reactive values reactive expressions observers  15.2 Reactive values A single reactive value, created by...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -23,7 +23,10 @@
     gtag('js', new Date());
   
     gtag('config', 'G-5D7MPSCTCQ');
-  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -57,10 +60,16 @@
 <li><a class="" href="user-feedback.html"><span class="header-section-number">8</span> User Feedback</a></li>
 <li><a class="" href="uploads-and-downloads.html"><span class="header-section-number">9</span> Uploads and downloads</a></li>
 <li><a class="" href="dynamic-ui.html"><span class="header-section-number">10</span> Dynamic UI</a></li>
-<li><a class="" href="why-reactivity.html"><span class="header-section-number">11</span> Why reactivity?</a></li>
-<li><a class="" href="the-reactive-graph.html"><span class="header-section-number">12</span> The reactive graph</a></li>
-<li><a class="active" href="reactive-building-blocks.html"><span class="header-section-number">13</span> Reactive building blocks</a></li>
-<li><a class="" href="escaping-the-graph.html"><span class="header-section-number">14</span> Escaping the graph</a></li>
+<li><a class="" href="bookmarking.html"><span class="header-section-number">11</span> Bookmarking</a></li>
+<li><a class="" href="tidy-evaluation.html"><span class="header-section-number">12</span> Tidy evaluation</a></li>
+<li><a class="" href="why-reactivity.html"><span class="header-section-number">13</span> Why reactivity?</a></li>
+<li><a class="" href="the-reactive-graph.html"><span class="header-section-number">14</span> The reactive graph</a></li>
+<li><a class="active" href="reactive-building-blocks.html"><span class="header-section-number">15</span> Reactive building blocks</a></li>
+<li><a class="" href="escaping-the-graph.html"><span class="header-section-number">16</span> Escaping the graph</a></li>
+<li><a class="" href="general-guidenlines.html"><span class="header-section-number">17</span> General guidenlines</a></li>
+<li><a class="" href="functions.html"><span class="header-section-number">18</span> Functions</a></li>
+<li><a class="" href="shiny-modules.html"><span class="header-section-number">19</span> Shiny modules</a></li>
+<li><a class="" href="packages.html"><span class="header-section-number">20</span> Packages</a></li>
 </ul>
 
         <div class="book-extra">
@@ -70,11 +79,11 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="reactive-building-blocks" class="section level1">
 <h1>
-<span class="header-section-number">13</span> Reactive building blocks<a class="anchor" aria-label="anchor" href="#reactive-building-blocks"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15</span> Reactive building blocks<a class="anchor" aria-label="anchor" href="#reactive-building-blocks"><i class="fas fa-link"></i></a>
 </h1>
 <div id="introduction-1" class="section level2">
 <h2>
-<span class="header-section-number">13.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>There are 3 fundamental building blocks of reactive programming:</p>
 <ul>
@@ -85,7 +94,7 @@
 </div>
 <div id="reactive-values" class="section level2">
 <h2>
-<span class="header-section-number">13.2</span> Reactive values<a class="anchor" aria-label="anchor" href="#reactive-values"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.2</span> Reactive values<a class="anchor" aria-label="anchor" href="#reactive-values"><i class="fas fa-link"></i></a>
 </h2>
 <ul>
 <li>A single reactive value, created by <code><a href="https://rdrr.io/pkg/shiny/man/reactiveVal.html">reactiveVal()</a></code>
@@ -96,15 +105,15 @@
 </div>
 <div id="reactive-expressions-1" class="section level2">
 <h2>
-<span class="header-section-number">13.3</span> Reactive expressions<a class="anchor" aria-label="anchor" href="#reactive-expressions-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.3</span> Reactive expressions<a class="anchor" aria-label="anchor" href="#reactive-expressions-1"><i class="fas fa-link"></i></a>
 </h2>
 <div id="errors" class="section level3">
 <h3>
-<span class="header-section-number">13.3.1</span> Errors<a class="anchor" aria-label="anchor" href="#errors"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.3.1</span> Errors<a class="anchor" aria-label="anchor" href="#errors"><i class="fas fa-link"></i></a>
 </h3>
 <div class="rmdimportant">
 <p>Reactive expressions cache errors in exactly the same way that they cache values</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveConsole.html">reactiveConsole</a></span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span>
 
@@ -128,7 +137,7 @@
 </div>
 <div id="observers-and-outputs" class="section level2">
 <h2>
-<span class="header-section-number">13.4</span> Observers and outputs<a class="anchor" aria-label="anchor" href="#observers-and-outputs"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.4</span> Observers and outputs<a class="anchor" aria-label="anchor" href="#observers-and-outputs"><i class="fas fa-link"></i></a>
 </h2>
 <p>Observers and outputs differ from reactive expressions in two important ways:</p>
 <ul>
@@ -139,9 +148,9 @@
 </div>
 <div id="isolating-code" class="section level2">
 <h2>
-<span class="header-section-number">13.5</span> Isolating code<a class="anchor" aria-label="anchor" href="#isolating-code"><i class="fas fa-link"></i></a>
+<span class="header-section-number">15.5</span> Isolating code<a class="anchor" aria-label="anchor" href="#isolating-code"><i class="fas fa-link"></i></a>
 </h2>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -163,19 +172,19 @@
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="the-reactive-graph.html"><span class="header-section-number">12</span> The reactive graph</a></div>
-<div class="next"><a href="escaping-the-graph.html"><span class="header-section-number">14</span> Escaping the graph</a></div>
+<div class="prev"><a href="the-reactive-graph.html"><span class="header-section-number">14</span> The reactive graph</a></div>
+<div class="next"><a href="escaping-the-graph.html"><span class="header-section-number">16</span> Escaping the graph</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#reactive-building-blocks"><span class="header-section-number">13</span> Reactive building blocks</a></li>
-<li><a class="nav-link" href="#introduction-1"><span class="header-section-number">13.1</span> Introduction</a></li>
-<li><a class="nav-link" href="#reactive-values"><span class="header-section-number">13.2</span> Reactive values</a></li>
+<li><a class="nav-link" href="#reactive-building-blocks"><span class="header-section-number">15</span> Reactive building blocks</a></li>
+<li><a class="nav-link" href="#introduction-1"><span class="header-section-number">15.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#reactive-values"><span class="header-section-number">15.2</span> Reactive values</a></li>
 <li>
-<a class="nav-link" href="#reactive-expressions-1"><span class="header-section-number">13.3</span> Reactive expressions</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#errors"><span class="header-section-number">13.3.1</span> Errors</a></li></ul>
+<a class="nav-link" href="#reactive-expressions-1"><span class="header-section-number">15.3</span> Reactive expressions</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#errors"><span class="header-section-number">15.3.1</span> Errors</a></li></ul>
 </li>
-<li><a class="nav-link" href="#observers-and-outputs"><span class="header-section-number">13.4</span> Observers and outputs</a></li>
-<li><a class="nav-link" href="#isolating-code"><span class="header-section-number">13.5</span> Isolating code</a></li>
+<li><a class="nav-link" href="#observers-and-outputs"><span class="header-section-number">15.4</span> Observers and outputs</a></li>
+<li><a class="nav-link" href="#isolating-code"><span class="header-section-number">15.5</span> Isolating code</a></li>
 </ul>
 
       <div class="book-extra">
@@ -193,7 +202,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Mastering Shiny with Examples</strong>" was written by Jie Wang. It was last built on 2022-03-05.</p>
+    <p>"<strong>Mastering Shiny with Examples</strong>" was written by Jie Wang. It was last built on 2022-05-28.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

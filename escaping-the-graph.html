@@ -4,16 +4,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Chapter 14 Escaping the graph | Mastering Shiny with Examples</title>
+<title>Chapter 16 Escaping the graph | Mastering Shiny with Examples</title>
 <meta name="author" content="Jie Wang">
-<meta name="description" content="14.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
-<meta name="generator" content="bookdown 0.24.10 with bs4_book()">
-<meta property="og:title" content="Chapter 14 Escaping the graph | Mastering Shiny with Examples">
+<meta name="description" content="16.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
+<meta name="generator" content="bookdown 0.26.3 with bs4_book()">
+<meta property="og:title" content="Chapter 16 Escaping the graph | Mastering Shiny with Examples">
 <meta property="og:type" content="book">
-<meta property="og:description" content="14.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
+<meta property="og:description" content="16.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 14 Escaping the graph | Mastering Shiny with Examples">
-<meta name="twitter:description" content="14.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
+<meta name="twitter:title" content="Chapter 16 Escaping the graph | Mastering Shiny with Examples">
+<meta name="twitter:description" content="16.1 Introduction We can combine reactiveValues() and observe()/observeEvent() to connect the right hand side of the reactive graph back to the left hand side. library(shiny) ui &lt;- fluidPage( ...">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
@@ -23,7 +23,10 @@
     gtag('js', new Date());
   
     gtag('config', 'G-5D7MPSCTCQ');
-  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
 </head>
 <body data-spy="scroll" data-target="#toc">
 
@@ -57,10 +60,16 @@
 <li><a class="" href="user-feedback.html"><span class="header-section-number">8</span> User Feedback</a></li>
 <li><a class="" href="uploads-and-downloads.html"><span class="header-section-number">9</span> Uploads and downloads</a></li>
 <li><a class="" href="dynamic-ui.html"><span class="header-section-number">10</span> Dynamic UI</a></li>
-<li><a class="" href="why-reactivity.html"><span class="header-section-number">11</span> Why reactivity?</a></li>
-<li><a class="" href="the-reactive-graph.html"><span class="header-section-number">12</span> The reactive graph</a></li>
-<li><a class="" href="reactive-building-blocks.html"><span class="header-section-number">13</span> Reactive building blocks</a></li>
-<li><a class="active" href="escaping-the-graph.html"><span class="header-section-number">14</span> Escaping the graph</a></li>
+<li><a class="" href="bookmarking.html"><span class="header-section-number">11</span> Bookmarking</a></li>
+<li><a class="" href="tidy-evaluation.html"><span class="header-section-number">12</span> Tidy evaluation</a></li>
+<li><a class="" href="why-reactivity.html"><span class="header-section-number">13</span> Why reactivity?</a></li>
+<li><a class="" href="the-reactive-graph.html"><span class="header-section-number">14</span> The reactive graph</a></li>
+<li><a class="" href="reactive-building-blocks.html"><span class="header-section-number">15</span> Reactive building blocks</a></li>
+<li><a class="active" href="escaping-the-graph.html"><span class="header-section-number">16</span> Escaping the graph</a></li>
+<li><a class="" href="general-guidenlines.html"><span class="header-section-number">17</span> General guidenlines</a></li>
+<li><a class="" href="functions.html"><span class="header-section-number">18</span> Functions</a></li>
+<li><a class="" href="shiny-modules.html"><span class="header-section-number">19</span> Shiny modules</a></li>
+<li><a class="" href="packages.html"><span class="header-section-number">20</span> Packages</a></li>
 </ul>
 
         <div class="book-extra">
@@ -70,27 +79,52 @@
 </div>
   </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="escaping-the-graph" class="section level1">
 <h1>
-<span class="header-section-number">14</span> Escaping the graph<a class="anchor" aria-label="anchor" href="#escaping-the-graph"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16</span> Escaping the graph<a class="anchor" aria-label="anchor" href="#escaping-the-graph"><i class="fas fa-link"></i></a>
 </h1>
 <div id="introduction-2" class="section level2">
 <h2>
-<span class="header-section-number">14.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>We can combine <code><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe()</a></code>/<code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent()</a></code> to connect the right hand side of the reactive graph back to the left hand side.</p>
-<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html">textInput</a></span><span class="op">(</span><span class="st">'nm'</span>, <span class="st">'name'</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="st">'clr'</span>, <span class="st">'Clear'</span><span class="op">)</span>,
-  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">textOutput</a></span><span class="op">(</span><span class="st">'hi'</span><span class="op">)</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html">textInput</a></span><span class="op">(</span><span class="st">"nm"</span>, <span class="st">"name"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="st">"clr"</span>, <span class="st">"Clear"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">textOutput</a></span><span class="op">(</span><span class="st">"hi"</span><span class="op">)</span>
 <span class="op">)</span>
 
 <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">output</span><span class="op">$</span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">'hi '</span>, <span class="va">input</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span>
+  <span class="va">output</span><span class="op">$</span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"hi "</span>, <span class="va">input</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">clr</span>, <span class="op">{</span>
-    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">'nm'</span>, value<span class="op">=</span><span class="st">''</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"nm"</span>, value <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="what-doesnt-the-reactive-graph-capture" class="section level2">
+<h2>
+<span class="header-section-number">16.2</span> What doesn’t the reactive graph capture?<a class="anchor" aria-label="anchor" href="#what-doesnt-the-reactive-graph-capture"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html">textInput</a></span><span class="op">(</span><span class="st">"nm"</span>, <span class="st">"name"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="st">"clr"</span>, <span class="st">"Clear"</span><span class="op">)</span>,
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">textOutput</a></span><span class="op">(</span><span class="st">"hi"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+  <span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Hi "</span>, <span class="va">input</span><span class="op">$</span><span class="va">nm</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="va">output</span><span class="op">$</span><span class="va">hi</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="fu">hi</span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+
+  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">clr</span>, <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"nm"</span>, value <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
 <span class="op">}</span>
 
@@ -98,16 +132,16 @@
 </div>
 <div id="case-studies" class="section level2">
 <h2>
-<span class="header-section-number">14.2</span> Case studies<a class="anchor" aria-label="anchor" href="#case-studies"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3</span> Case studies<a class="anchor" aria-label="anchor" href="#case-studies"><i class="fas fa-link"></i></a>
 </h2>
 <div id="one-output-modified-by-multiple-inputs" class="section level3">
 <h3>
-<span class="header-section-number">14.2.1</span> One output modified by multiple inputs<a class="anchor" aria-label="anchor" href="#one-output-modified-by-multiple-inputs"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.1</span> One output modified by multiple inputs<a class="anchor" aria-label="anchor" href="#one-output-modified-by-multiple-inputs"><i class="fas fa-link"></i></a>
 </h3>
 <div class="rmdimportant">
-<p>reactiveValues()</p>
+<p>combine <code><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues()</a></code> and <code><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent()</a></code> or <code><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe()</a></code> to solve problems that are otherwise very challenging</p>
 </div>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb106"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -127,7 +161,7 @@
 <span class="op">}</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -143,7 +177,7 @@
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">down</span>, <span class="op">{</span>
     <span class="va">r</span><span class="op">$</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="va">r</span><span class="op">$</span><span class="va">n</span> <span class="op">-</span> <span class="fl">1</span>
   <span class="op">}</span><span class="op">)</span>
-  
+
   <span class="va">output</span><span class="op">$</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">n</span><span class="op">)</span>
 <span class="op">}</span>
 
@@ -151,9 +185,9 @@
 </div>
 <div id="accumulating-inputs" class="section level3">
 <h3>
-<span class="header-section-number">14.2.2</span> Accumulating inputs<a class="anchor" aria-label="anchor" href="#accumulating-inputs"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.2</span> Accumulating inputs<a class="anchor" aria-label="anchor" href="#accumulating-inputs"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -167,17 +201,16 @@
     <span class="va">r</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">name</span>, <span class="va">r</span><span class="op">$</span><span class="va">names</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"name"</span>, value <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
-  
+
   <span class="va">output</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">names</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
-</div>
-<div id="deleting-inputs" class="section level3">
-<h3>
-<span class="header-section-number">14.2.3</span> Deleting inputs<a class="anchor" aria-label="anchor" href="#deleting-inputs"><i class="fas fa-link"></i></a>
-</h3>
-<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<div id="updated-version-deleting-inputs" class="section level4">
+<h4>
+<span class="header-section-number">16.3.2.1</span> updated version: Deleting inputs<a class="anchor" aria-label="anchor" href="#updated-version-deleting-inputs"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -192,22 +225,23 @@
     <span class="va">r</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">union</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">names</span>, <span class="va">input</span><span class="op">$</span><span class="va">name</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"name"</span>, value <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
-  
+
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">del</span>, <span class="op">{</span>
     <span class="va">r</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html">setdiff</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">names</span>, <span class="va">input</span><span class="op">$</span><span class="va">name</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTextInput.html">updateTextInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"name"</span>, value <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
   <span class="op">}</span><span class="op">)</span>
-  
+
   <span class="va">output</span><span class="op">$</span><span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">names</span><span class="op">)</span>
 <span class="op">}</span>
 
 <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
 </div>
+</div>
 <div id="pausing-animations" class="section level3">
 <h3>
-<span class="header-section-number">14.2.4</span> Pausing animations<a class="anchor" aria-label="anchor" href="#pausing-animations"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.3</span> Pausing animations<a class="anchor" aria-label="anchor" href="#pausing-animations"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -224,7 +258,7 @@
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">stop</span>, <span class="op">{</span>
     <span class="va">r</span><span class="op">$</span><span class="va">running</span> <span class="op">&lt;-</span> <span class="cn">FALSE</span>
   <span class="op">}</span><span class="op">)</span>
-  
+
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe</a></span><span class="op">(</span><span class="op">{</span>
     <span class="kw">if</span> <span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">running</span><span class="op">)</span> <span class="op">{</span>
       <span class="va">r</span><span class="op">$</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html">isolate</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">n</span><span class="op">)</span> <span class="op">+</span> <span class="fl">1</span>
@@ -238,13 +272,13 @@
 </div>
 <div id="exercises-8" class="section level3">
 <h3>
-<span class="header-section-number">14.2.5</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-8"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.4</span> Exercises<a class="anchor" aria-label="anchor" href="#exercises-8"><i class="fas fa-link"></i></a>
 </h3>
 <div id="ex-1-6" class="section level4">
 <h4>
-<span class="header-section-number">14.2.5.1</span> Ex 1<a class="anchor" aria-label="anchor" href="#ex-1-6"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.4.1</span> Ex 1<a class="anchor" aria-label="anchor" href="#ex-1-6"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -254,17 +288,17 @@
 <span class="op">)</span>
 
 <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues</a></span><span class="op">(</span>fun<span class="op">=</span><span class="st">""</span><span class="op">)</span>
+  <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">rnorm</span>, <span class="op">{</span>
-    <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">'rnorm'</span>
+    <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">"rnorm"</span>
   <span class="op">}</span><span class="op">)</span>
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">runif</span>, <span class="op">{</span>
-    <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">'runif'</span>
+    <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">"runif"</span>
   <span class="op">}</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">fun</span><span class="op">)</span><span class="op">)</span>
-  
+
   <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span><span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">fun</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">fun</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>
@@ -275,9 +309,9 @@
 </div>
 <div id="ex-2-6" class="section level4">
 <h4>
-<span class="header-section-number">14.2.5.2</span> Ex 2<a class="anchor" aria-label="anchor" href="#ex-2-6"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.4.2</span> Ex 2<a class="anchor" aria-label="anchor" href="#ex-2-6"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -287,15 +321,16 @@
 <span class="op">)</span>
 
 <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
-  <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues</a></span><span class="op">(</span>fun<span class="op">=</span><span class="st">"rnorm"</span><span class="op">)</span>
+  <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactiveValues.html">reactiveValues</a></span><span class="op">(</span>fun <span class="op">=</span> <span class="st">"rnorm"</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">go</span>, <span class="op">{</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">'Normal'</span><span class="op">)</span> <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">'rnorm'</span>
-    <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">'Uniform'</span><span class="op">)</span> <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">'runif'</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Normal"</span><span class="op">)</span> <span class="op">{</span>
+      <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">"rnorm"</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Uniform"</span><span class="op">)</span> <span class="va">r</span><span class="op">$</span><span class="va">fun</span> <span class="op">&lt;-</span> <span class="st">"runif"</span>
   <span class="op">}</span><span class="op">)</span>
 
   <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observe.html">observe</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">fun</span><span class="op">)</span><span class="op">)</span>
-  
+
   <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span><span class="op">{</span>
     <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/req.html">req</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">go</span><span class="op">)</span>
     <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">r</span><span class="op">$</span><span class="va">fun</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>
@@ -306,9 +341,9 @@
 </div>
 <div id="ex-3-5" class="section level4">
 <h4>
-<span class="header-section-number">14.2.5.3</span> Ex 3<a class="anchor" aria-label="anchor" href="#ex-3-5"><i class="fas fa-link"></i></a>
+<span class="header-section-number">16.3.4.3</span> Ex 3<a class="anchor" aria-label="anchor" href="#ex-3-5"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
 
 <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
@@ -319,14 +354,15 @@
 
 <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
   <span class="va">r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">eventReactive</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">go</span>, <span class="op">{</span>
-    <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">'Normal'</span><span class="op">)</span> <span class="st">'rnorm'</span>
-    <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">'Uniform'</span><span class="op">)</span> <span class="st">'runif'</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Normal"</span><span class="op">)</span> <span class="op">{</span>
+      <span class="st">"rnorm"</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">type</span> <span class="op">==</span> <span class="st">"Uniform"</span><span class="op">)</span> <span class="st">"runif"</span>
   <span class="op">}</span><span class="op">)</span>
 
   <span class="co"># observeEvent(input$go, {</span>
-    <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span><span class="op">{</span>
-      <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="fu">r</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>
-    <span class="op">}</span><span class="op">)</span>
+  <span class="va">output</span><span class="op">$</span><span class="va">plot</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span><span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="fu">r</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">(</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>
+  <span class="op">}</span><span class="op">)</span>
   <span class="co"># })</span>
 <span class="op">}</span>
 
@@ -337,20 +373,20 @@
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="reactive-building-blocks.html"><span class="header-section-number">13</span> Reactive building blocks</a></div>
-<div class="empty"></div>
+<div class="prev"><a href="reactive-building-blocks.html"><span class="header-section-number">15</span> Reactive building blocks</a></div>
+<div class="next"><a href="general-guidenlines.html"><span class="header-section-number">17</span> General guidenlines</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#escaping-the-graph"><span class="header-section-number">14</span> Escaping the graph</a></li>
-<li><a class="nav-link" href="#introduction-2"><span class="header-section-number">14.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#escaping-the-graph"><span class="header-section-number">16</span> Escaping the graph</a></li>
+<li><a class="nav-link" href="#introduction-2"><span class="header-section-number">16.1</span> Introduction</a></li>
+<li><a class="nav-link" href="#what-doesnt-the-reactive-graph-capture"><span class="header-section-number">16.2</span> What doesn’t the reactive graph capture?</a></li>
 <li>
-<a class="nav-link" href="#case-studies"><span class="header-section-number">14.2</span> Case studies</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#one-output-modified-by-multiple-inputs"><span class="header-section-number">14.2.1</span> One output modified by multiple inputs</a></li>
-<li><a class="nav-link" href="#accumulating-inputs"><span class="header-section-number">14.2.2</span> Accumulating inputs</a></li>
-<li><a class="nav-link" href="#deleting-inputs"><span class="header-section-number">14.2.3</span> Deleting inputs</a></li>
-<li><a class="nav-link" href="#pausing-animations"><span class="header-section-number">14.2.4</span> Pausing animations</a></li>
-<li><a class="nav-link" href="#exercises-8"><span class="header-section-number">14.2.5</span> Exercises</a></li>
+<a class="nav-link" href="#case-studies"><span class="header-section-number">16.3</span> Case studies</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#one-output-modified-by-multiple-inputs"><span class="header-section-number">16.3.1</span> One output modified by multiple inputs</a></li>
+<li><a class="nav-link" href="#accumulating-inputs"><span class="header-section-number">16.3.2</span> Accumulating inputs</a></li>
+<li><a class="nav-link" href="#pausing-animations"><span class="header-section-number">16.3.3</span> Pausing animations</a></li>
+<li><a class="nav-link" href="#exercises-8"><span class="header-section-number">16.3.4</span> Exercises</a></li>
 </ul>
 </li>
 </ul>
@@ -370,7 +406,7 @@
 <footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
 
   <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>Mastering Shiny with Examples</strong>" was written by Jie Wang. It was last built on 2022-03-05.</p>
+    <p>"<strong>Mastering Shiny with Examples</strong>" was written by Jie Wang. It was last built on 2022-05-28.</p>
   </div>
 
   <div class="col-12 col-md-6 mt-3">

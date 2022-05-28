@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>Chapter 19 Shiny modules | Mastering Shiny with Examples</title>
+<meta name="author" content="Jie Wang">
+<meta name="description" content="The magic of modules comes because these functions are constructed in a special way that creates a “namespace”. Shiny modules have two big advantages: namespacing makes it easier to understand how...">
+<meta name="generator" content="bookdown 0.26.3 with bs4_book()">
+<meta property="og:title" content="Chapter 19 Shiny modules | Mastering Shiny with Examples">
+<meta property="og:type" content="book">
+<meta property="og:description" content="The magic of modules comes because these functions are constructed in a special way that creates a “namespace”. Shiny modules have two big advantages: namespacing makes it easier to understand how...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 19 Shiny modules | Mastering Shiny with Examples">
+<meta name="twitter:description" content="The magic of modules comes because these functions are constructed in a special way that creates a “namespace”. Shiny modules have two big advantages: namespacing makes it easier to understand how...">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="libs/accessible-code-block-0.0.1/empty-anchor.js"></script><!-- Global site tag (gtag.js) - Google Analytics --><script async src="https://www.googletagmanager.com/gtag/js?id=G-5D7MPSCTCQ"></script><script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+  
+    gtag('config', 'G-5D7MPSCTCQ');
+  </script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS --><style type="text/css">
+    
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  </style>
+</head>
+<body data-spy="scroll" data-target="#toc">
+
+<div class="container-fluid">
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <h1>
+        <a href="index.html" title="">Mastering Shiny with Examples</a>
+      </h1>
+      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html">About</a></li>
+<li class="book-part">Getting started</li>
+<li><a class="" href="your-first-shiny-app.html"><span class="header-section-number">1</span> Your first Shiny app</a></li>
+<li><a class="" href="basic-ui.html"><span class="header-section-number">2</span> Basic UI</a></li>
+<li><a class="" href="basic-reactivity.html"><span class="header-section-number">3</span> Basic reactivity</a></li>
+<li><a class="" href="case-study-er-injuries.html"><span class="header-section-number">4</span> Case study: ER injuries</a></li>
+<li><a class="" href="workflow.html"><span class="header-section-number">5</span> Workflow</a></li>
+<li><a class="" href="layout-themes-html.html"><span class="header-section-number">6</span> Layout, themes, HTML</a></li>
+<li><a class="" href="graphics.html"><span class="header-section-number">7</span> Graphics</a></li>
+<li><a class="" href="user-feedback.html"><span class="header-section-number">8</span> User Feedback</a></li>
+<li><a class="" href="uploads-and-downloads.html"><span class="header-section-number">9</span> Uploads and downloads</a></li>
+<li><a class="" href="dynamic-ui.html"><span class="header-section-number">10</span> Dynamic UI</a></li>
+<li><a class="" href="bookmarking.html"><span class="header-section-number">11</span> Bookmarking</a></li>
+<li><a class="" href="tidy-evaluation.html"><span class="header-section-number">12</span> Tidy evaluation</a></li>
+<li><a class="" href="why-reactivity.html"><span class="header-section-number">13</span> Why reactivity?</a></li>
+<li><a class="" href="the-reactive-graph.html"><span class="header-section-number">14</span> The reactive graph</a></li>
+<li><a class="" href="reactive-building-blocks.html"><span class="header-section-number">15</span> Reactive building blocks</a></li>
+<li><a class="" href="escaping-the-graph.html"><span class="header-section-number">16</span> Escaping the graph</a></li>
+<li><a class="" href="general-guidenlines.html"><span class="header-section-number">17</span> General guidenlines</a></li>
+<li><a class="" href="functions.html"><span class="header-section-number">18</span> Functions</a></li>
+<li><a class="active" href="shiny-modules.html"><span class="header-section-number">19</span> Shiny modules</a></li>
+<li><a class="" href="packages.html"><span class="header-section-number">20</span> Packages</a></li>
+</ul>
+
+        <div class="book-extra">
+          <p><a id="book-repo" href="https://github.com/ifendo/mastering-shiny-with-examples">View book source <i class="fab fa-github"></i></a></p>
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="shiny-modules" class="section level1">
+<h1>
+<span class="header-section-number">19</span> Shiny modules<a class="anchor" aria-label="anchor" href="#shiny-modules"><i class="fas fa-link"></i></a>
+</h1>
+<p>The magic of modules comes because these functions are constructed in a special way that creates a “namespace”.</p>
+<p>Shiny modules have two big advantages:</p>
+<ul>
+<li>namespacing makes it easier to understand how your app works because you can write, analyse, and test individual components in isolation.</li>
+<li>modules are functions they help you reuse</li>
+</ul>
+<div id="module-basics" class="section level2">
+<h2>
+<span class="header-section-number">19.1</span> Module basics<a class="anchor" aria-label="anchor" href="#module-basics"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="st">"var"</span>, <span class="st">"Variable"</span>, <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html">numericInput</a></span><span class="op">(</span><span class="st">"bins"</span>, <span class="st">"bins"</span>, <span class="fl">10</span>, min <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html">plotOutput</a></span><span class="op">(</span><span class="st">"hist"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+    <span class="va">output</span><span class="op">$</span><span class="va">hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span>
+        <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">bins</span>, main <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">)</span>
+        <span class="op">}</span>,
+        res <span class="op">=</span> <span class="fl">96</span>
+    <span class="op">)</span>
+<span class="op">}</span>
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
+<div id="module-ui" class="section level3">
+<h3>
+<span class="header-section-number">19.1.1</span> module UI<a class="anchor" aria-label="anchor" href="#module-ui"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">histogramUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"var"</span><span class="op">)</span>, <span class="st">"Variables"</span>, choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html">numericInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"bins"</span><span class="op">)</span>, <span class="st">"bins"</span>, value <span class="op">=</span> <span class="fl">10</span>, min <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html">plotOutput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"hist"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="module-server" class="section level3">
+<h3>
+<span class="header-section-number">19.1.2</span> module server<a class="anchor" aria-label="anchor" href="#module-server"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">histogramServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+        <span class="va">output</span><span class="op">$</span><span class="va">hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span>
+            <span class="op">{</span>
+                <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">bins</span>, main <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">)</span>
+            <span class="op">}</span>,
+            res <span class="op">=</span> <span class="fl">96</span>
+        <span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<p>updated App</p>
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">histogramApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">fulidPage</span><span class="op">(</span>
+        <span class="fu">histgoramUI</span><span class="op">(</span><span class="st">"hist1"</span><span class="op">)</span>
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu">histogramServer</span><span class="op">(</span><span class="st">"hist1"</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+</div>
+<div id="module-server-inputs-and-outputs" class="section level2">
+<h2>
+<span class="header-section-number">19.2</span> module server inputs and outputs<a class="anchor" aria-label="anchor" href="#module-server-inputs-and-outputs"><i class="fas fa-link"></i></a>
+</h2>
+<p>Question: how module server can take additional reactive inputs and return one or more reactive outputs?</p>
+<p>Connecting modules together requires you to be explicit about inputs and outputs</p>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">datasetInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">get</span>, <span class="st">"package:datasets"</span><span class="op">)</span>
+        <span class="va">names</span> <span class="op">&lt;-</span> <span class="va">names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"dataset"</span><span class="op">)</span>, <span class="st">"Pick a dataset"</span>, choices <span class="op">=</span> <span class="va">names</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dataset</span>, <span class="st">"package:datasets"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu">datasetInput</span><span class="op">(</span><span class="st">"dataset"</span>, filter <span class="op">=</span> <span class="va">filter</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">tableOutput</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>
+    <span class="op">)</span>
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">datasetServer</span><span class="op">(</span><span class="st">"dataset"</span><span class="op">)</span>
+        <span class="va">output</span><span class="op">$</span><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+<div id="add-variable-selection" class="section level3">
+<h3>
+<span class="header-section-number">19.2.1</span> Add variable selection<a class="anchor" aria-label="anchor" href="#add-variable-selection"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">datasetInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">get</span>, <span class="st">"package:datasets"</span><span class="op">)</span>
+        <span class="va">names</span> <span class="op">&lt;-</span> <span class="va">names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"dataset"</span><span class="op">)</span>, <span class="st">"Pick a dataset"</span>, choices <span class="op">=</span> <span class="va">names</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dataset</span>, <span class="st">"package:datasets"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable UI</span>
+<span class="va">selectVarInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"var"</span><span class="op">)</span>, <span class="st">"Variable"</span>, choices <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server: helper function</span>
+<span class="va">find_vars</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server</span>
+<span class="va">selectVarServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html">updateSelectInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"var"</span>, choices <span class="op">=</span> <span class="fu">find_vars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># the updated App: with variable selection included</span>
+<span class="va">selectVarApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu">datasetInput</span><span class="op">(</span><span class="st">"data"</span>, <span class="va">is.data.frame</span><span class="op">)</span>,
+        <span class="fu">selectVarInput</span><span class="op">(</span><span class="st">"var"</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"out"</span><span class="op">)</span>
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">datasetServer</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>
+        <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu">selectVarServer</span><span class="op">(</span><span class="st">"var"</span>, <span class="va">data</span>, filter <span class="op">=</span> <span class="va">filter</span><span class="op">)</span>
+
+        <span class="va">output</span><span class="op">$</span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderPrint</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># selectVarApp()</span></code></pre></div>
+</div>
+</div>
+<div id="server-inputs" class="section level2">
+<h2>
+<span class="header-section-number">19.3</span> Server inputs<a class="anchor" aria-label="anchor" href="#server-inputs"><i class="fas fa-link"></i></a>
+</h2>
+<p>When designing a module server, we need to think about who is going to provide the value for each argument:</p>
+<ul>
+<li>is it fixed and constant over the life-time of the app?</li>
+<li>or is it reactive, changing as the user interacts with the app?</li>
+</ul>
+<p>Once we’ve made this decision, it’s good practice to check that each input to the server module is either reactive or constant.</p>
+<div class="rmdimportant">
+<p><code>input$var</code> is not a reactive, so whenever you pass an input value into a module, you’ll need to wrap it in a <code><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive()</a></code></p>
+</div>
+<div id="updated-version-of-selectvarserver" class="section level3">
+<h3>
+<span class="header-section-number">19.3.1</span> updated version of <code>selectVarServer()</code><a class="anchor" aria-label="anchor" href="#updated-version-of-selectvarserver"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb122"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">selectVarServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html">updateSelectInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"var"</span>, choices <span class="op">=</span> <span class="fu">find_vars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span></code></pre></div>
+</div>
+<div id="modules-inside-of-modules" class="section level3">
+<h3>
+<span class="header-section-number">19.3.2</span> Modules inside of modules<a class="anchor" aria-label="anchor" href="#modules-inside-of-modules"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">datasetInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">get</span>, <span class="st">"package:datasets"</span><span class="op">)</span>
+        <span class="va">names</span> <span class="op">&lt;-</span> <span class="va">names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"dataset"</span><span class="op">)</span>, <span class="st">"Pick a dataset"</span>, choices <span class="op">=</span> <span class="va">names</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dataset</span>, <span class="st">"package:datasets"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable UI</span>
+<span class="va">selectVarInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"var"</span><span class="op">)</span>, <span class="st">"Variable"</span>, choices <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server: helper function</span>
+<span class="va">find_vars</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server</span>
+<span class="va">selectVarServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html">updateSelectInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"var"</span>, choices <span class="op">=</span> <span class="fu">find_vars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">selectDataVarUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+        <span class="fu">datasetInput</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"data"</span><span class="op">)</span>, filter <span class="op">=</span> <span class="va">is.data.frame</span><span class="op">)</span>,
+        <span class="fu">selectVarInput</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"var"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">selectDataVarServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">datasetServer</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>
+        <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu">selectVarServer</span><span class="op">(</span><span class="st">"var"</span>, <span class="va">data</span>, filter <span class="op">=</span> <span class="va">filter</span><span class="op">)</span>
+
+        <span class="va">var</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">selectDataVarApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarLayout</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarPanel</a></span><span class="op">(</span><span class="fu">selectDataVarUI</span><span class="op">(</span><span class="st">"var"</span><span class="op">)</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">mainPanel</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"out"</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">)</span>
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">var</span> <span class="op">&lt;-</span> <span class="fu">selectDataVarServer</span><span class="op">(</span><span class="st">"var"</span>, <span class="va">filter</span><span class="op">)</span>
+
+        <span class="va">output</span><span class="op">$</span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderPrint</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/cor.html">var</a></span><span class="op">(</span><span class="op">)</span>, width <span class="op">=</span> <span class="fl">40</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># selectDataVarApp()</span></code></pre></div>
+</div>
+<div id="histgoram-example" class="section level3">
+<h3>
+<span class="header-section-number">19.3.3</span> histgoram example<a class="anchor" aria-label="anchor" href="#histgoram-example"><i class="fas fa-link"></i></a>
+</h3>
+<div class="rmdnote">
+<p>The key challenge of creating modules is creating functions that are flexible enough to be used in multiple places, but simple enough that they can easily be understood.</p>
+</div>
+<div class="sourceCode" id="cb124"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">datasetInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">get</span>, <span class="st">"package:datasets"</span><span class="op">)</span>
+        <span class="va">names</span> <span class="op">&lt;-</span> <span class="va">names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"dataset"</span><span class="op">)</span>, <span class="st">"Pick a dataset"</span>, choices <span class="op">=</span> <span class="va">names</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dataset</span>, <span class="st">"package:datasets"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable UI</span>
+<span class="va">selectVarInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"var"</span><span class="op">)</span>, <span class="st">"Variable"</span>, choices <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server: helper function</span>
+<span class="va">find_vars</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+<span class="op">}</span>
+
+<span class="co"># select variable server</span>
+<span class="va">selectVarServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">filter</span> <span class="op">=</span> <span class="va">is.numeric</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateSelectInput.html">updateSelectInput</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"var"</span>, choices <span class="op">=</span> <span class="fu">find_vars</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span>, <span class="va">filter</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">input</span><span class="op">$</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># histogram example</span>
+
+<span class="va">histogramOutput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html">numericInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"bins"</span><span class="op">)</span>, <span class="st">"bins"</span>, <span class="fl">10</span>, min <span class="op">=</span> <span class="fl">1</span>, step <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/plotOutput.html">plotOutput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"hist"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">}</span>
+
+<span class="co"># x: variable to plot</span>
+<span class="co"># tilte: title for the histogram</span>
+<span class="va">histogramServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">x</span>, <span class="va">title</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="st">"Histogram"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">title</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">output</span><span class="op">$</span><span class="va">hist</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPlot.html">renderPlot</a></span><span class="op">(</span>
+            <span class="op">{</span>
+                <span class="va">main</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span><span class="op">)</span>, <span class="st">" ["</span>, <span class="va">input</span><span class="op">$</span><span class="va">bins</span>, <span class="st">"]"</span><span class="op">)</span>
+                <span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes_position.html">x</a></span><span class="op">(</span><span class="op">)</span>, breaks <span class="op">=</span> <span class="va">input</span><span class="op">$</span><span class="va">bins</span>, main <span class="op">=</span> <span class="va">main</span><span class="op">)</span>
+            <span class="op">}</span>,
+            res <span class="op">=</span> <span class="fl">96</span>
+        <span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">histogramApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarLayout</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarPanel</a></span><span class="op">(</span>
+                <span class="fu">datasetInput</span><span class="op">(</span><span class="st">"data"</span>, <span class="va">is.data.frame</span><span class="op">)</span>,
+                <span class="fu">selectVarInput</span><span class="op">(</span><span class="st">"var"</span><span class="op">)</span>
+            <span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">mainPanel</a></span><span class="op">(</span>
+                <span class="fu">histogramOutput</span><span class="op">(</span><span class="st">"hist"</span><span class="op">)</span>
+            <span class="op">)</span>
+        <span class="op">)</span>,
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">datasetServer</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>
+        <span class="va">x</span> <span class="op">&lt;-</span> <span class="fu">selectVarServer</span><span class="op">(</span><span class="st">"var"</span>, <span class="va">data</span><span class="op">)</span>
+
+        <span class="fu">histogramServer</span><span class="op">(</span><span class="st">"hist"</span>, <span class="va">x</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">histogramApp</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="rmdimportant">
+<p>When passing an argument to a module, you want the module to react to the value changing which means that you have to pass the reactive, not its <strong>current value</strong>.</p>
+</div>
+</div>
+</div>
+<div id="limited-selection-other" class="section level2">
+<h2>
+<span class="header-section-number">19.4</span> limited selection + other<a class="anchor" aria-label="anchor" href="#limited-selection-other"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">radioExtraUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">label</span>, <span class="va">choices</span>, <span class="va">selected</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">placeholder</span> <span class="op">=</span> <span class="st">"Other"</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">other</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html">textInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"other"</span><span class="op">)</span>, label <span class="op">=</span> <span class="cn">NULL</span>, placeholder <span class="op">=</span> <span class="va">placeholder</span><span class="op">)</span>
+
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">choices</span><span class="op">)</span><span class="op">)</span><span class="op">)</span> <span class="va">choices</span> <span class="kw">else</span> <span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">choices</span><span class="op">)</span>
+    <span class="va">values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html">unname</a></span><span class="op">(</span><span class="va">choices</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/radioButtons.html">radioButtons</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"primary"</span><span class="op">)</span>,
+        label <span class="op">=</span> <span class="va">label</span>,
+        choiceValues <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">names</span>, <span class="st">"other"</span><span class="op">)</span>,
+        choiceNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">as.list</a></span><span class="op">(</span><span class="va">values</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">other</span><span class="op">)</span><span class="op">)</span>,
+        selected <span class="op">=</span> <span class="va">selected</span>
+    <span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">radioExtraServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">other</span>, ignoreInit <span class="op">=</span> <span class="cn">TRUE</span>, <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateRadioButtons.html">updateRadioButtons</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"primary"</span>, selected <span class="op">=</span> <span class="st">"other"</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
+            <span class="kw">if</span> <span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">primary</span> <span class="op">==</span> <span class="st">"other"</span><span class="op">)</span> <span class="op">{</span>
+                <span class="va">input</span><span class="op">$</span><span class="va">other</span>
+            <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+                <span class="va">input</span><span class="op">$</span><span class="va">primary</span>
+            <span class="op">}</span>
+        <span class="op">}</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">radioExtraApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu">radioExtraUI</span><span class="op">(</span><span class="st">"extra"</span>, <span class="va">...</span><span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">textOutput</a></span><span class="op">(</span><span class="st">"value"</span><span class="op">)</span>
+    <span class="op">)</span>
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">server</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">extra</span> <span class="op">&lt;-</span> <span class="fu">radioExtraServer</span><span class="op">(</span><span class="st">"extra"</span><span class="op">)</span>
+        <span class="va">output</span><span class="op">$</span><span class="va">value</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"Selected: "</span>, <span class="fu">extra</span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">radioExtraApp</span><span class="op">(</span>
+    label <span class="op">=</span> <span class="st">"How do you usually read csv files?"</span>,
+    choices <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"read.csv()"</span>, <span class="st">"readr::read_csv()"</span>, <span class="st">"data.table::fread()"</span><span class="op">)</span>,
+    selected <span class="op">=</span> <span class="st">"read.csv()"</span>
+<span class="op">)</span></code></pre></div>
+</div>
+<div id="wizard" class="section level2">
+<h2>
+<span class="header-section-number">19.5</span> Wizard<a class="anchor" aria-label="anchor" href="#wizard"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb126"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+
+<span class="va">nextPage</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"go_"</span>, <span class="va">i</span>, <span class="st">"_"</span>, <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="st">"next"</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">prevPage</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">i</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"go_"</span>, <span class="va">i</span>, <span class="st">"_"</span>, <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>, <span class="st">"prev"</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">wrapPage</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">title</span>, <span class="va">page</span>, <span class="va">button_left</span> <span class="op">=</span> <span class="cn">NULL</span>, <span class="va">button_right</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/tabPanel.html">tabPanel</a></span><span class="op">(</span>
+        title <span class="op">=</span> <span class="va">title</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidRow</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html">column</a></span><span class="op">(</span><span class="fl">12</span>, <span class="va">page</span><span class="op">)</span>
+        <span class="op">)</span>,
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidRow</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html">column</a></span><span class="op">(</span><span class="fl">6</span>, <span class="va">button_left</span><span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html">column</a></span><span class="op">(</span><span class="fl">6</span>, <span class="va">button_right</span><span class="op">)</span>
+        <span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">wizardUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">pages</span>, <span class="va">doneButton</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html">is.list</a></span><span class="op">(</span><span class="va">pages</span><span class="op">)</span><span class="op">)</span>
+    <span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pages</span><span class="op">)</span>
+
+    <span class="va">wrapped</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/vector.html">vector</a></span><span class="op">(</span><span class="st">"list"</span>, <span class="va">n</span><span class="op">)</span>
+
+    <span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_along</a></span><span class="op">(</span><span class="va">pages</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="co"># first page only has next; last page only has prev + done</span>
+        <span class="va">lhs</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">&gt;</span> <span class="fl">1</span><span class="op">)</span> <span class="fu">prevPage</span><span class="op">(</span><span class="va">id</span>, <span class="va">i</span><span class="op">)</span>
+        <span class="va">rhs</span> <span class="op">&lt;-</span> <span class="kw">if</span> <span class="op">(</span><span class="va">i</span> <span class="op">&lt;</span> <span class="va">n</span><span class="op">)</span> <span class="fu">nextPage</span><span class="op">(</span><span class="va">id</span>, <span class="va">i</span><span class="op">)</span> <span class="kw">else</span> <span class="va">doneButton</span>
+
+        <span class="va">wrapped</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu">wrapPage</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"page_"</span>, <span class="va">i</span><span class="op">)</span>, <span class="va">pages</span><span class="op">[[</span><span class="va">i</span><span class="op">]</span><span class="op">]</span>, <span class="va">lhs</span>, <span class="va">rhs</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="co"># create tabsetPanel</span>
+    <span class="va">wrapped</span><span class="op">$</span><span class="va">id</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"wizard"</span><span class="op">)</span>
+    <span class="va">wrapped</span><span class="op">$</span><span class="va">type</span> <span class="op">&lt;-</span> <span class="st">"hidden"</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/do.call.html">do.call</a></span><span class="op">(</span><span class="st">"tabsetPanel"</span>, <span class="va">wrapped</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">wizardServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">n</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">changePage</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">from</span>, <span class="va">to</span><span class="op">)</span> <span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">[[</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"go_"</span>, <span class="va">from</span>, <span class="st">"_"</span>, <span class="va">to</span><span class="op">)</span><span class="op">]</span><span class="op">]</span>, <span class="op">{</span>
+                <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/updateTabsetPanel.html">updateTabsetPanel</a></span><span class="op">(</span><span class="va">session</span>, <span class="st">"wizard"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="st">"page_"</span>, <span class="va">to</span><span class="op">)</span><span class="op">)</span>
+            <span class="op">}</span><span class="op">)</span>
+        <span class="op">}</span>
+
+        <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq_len</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">ids</span><span class="op">[</span><span class="op">-</span><span class="fl">1</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu">changePage</span><span class="op">(</span><span class="va">i</span>, <span class="va">i</span> <span class="op">-</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+        <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">ids</span><span class="op">[</span><span class="op">-</span><span class="va">n</span><span class="op">]</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="fu">changePage</span><span class="op">(</span><span class="va">i</span>, <span class="va">i</span> <span class="op">+</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">wizardApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">...</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">pages</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">...</span><span class="op">)</span>
+
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu">wizardUI</span><span class="op">(</span><span class="st">"whiz"</span>, <span class="va">pages</span><span class="op">)</span>
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu">wizardServer</span><span class="op">(</span><span class="st">"whiz"</span>, <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">pages</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">page1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textInput.html">textInput</a></span><span class="op">(</span><span class="st">"name"</span>, <span class="st">"What's your name?"</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">page2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/numericInput.html">numericInput</a></span><span class="op">(</span><span class="st">"age"</span>, <span class="st">"How old are you?"</span>, <span class="fl">20</span><span class="op">)</span>
+<span class="op">)</span>
+<span class="va">page3</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/htmltools/man/tagList.html">tagList</a></span><span class="op">(</span>
+    <span class="st">"Is this data correct?"</span>,
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"info"</span><span class="op">)</span>
+<span class="op">)</span>
+
+<span class="co"># call 1</span>
+<span class="fu">wizardApp</span><span class="op">(</span><span class="va">page1</span>, <span class="va">page2</span>, <span class="va">page3</span><span class="op">)</span>
+
+<span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+    <span class="fu">wizardUI</span><span class="op">(</span>
+        id <span class="op">=</span> <span class="st">"demographics"</span>,
+        pages <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span><span class="va">page1</span>, <span class="va">page2</span>, <span class="va">page3</span><span class="op">)</span>,
+        doneButton <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html">actionButton</a></span><span class="op">(</span><span class="st">"done"</span>, <span class="st">"Submit"</span><span class="op">)</span>
+    <span class="op">)</span>
+<span class="op">)</span>
+
+<span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu">wizardServer</span><span class="op">(</span><span class="st">"demographics"</span>, <span class="fl">3</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">done</span>, <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/showModal.html">showModal</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/modalDialog.html">modalDialog</a></span><span class="op">(</span><span class="st">"Thank you!"</span>, footer <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span>
+    <span class="op">)</span><span class="op">)</span>
+
+    <span class="va">output</span><span class="op">$</span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span>
+        <span class="st">"Age: "</span>, <span class="va">input</span><span class="op">$</span><span class="va">age</span>, <span class="st">"\n"</span>,
+        <span class="st">"Name: "</span>, <span class="va">input</span><span class="op">$</span><span class="va">name</span>, <span class="st">"\n"</span>
+    <span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+<span class="co"># call 2</span>
+<span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="dynamic-ui-1" class="section level2">
+<h2>
+<span class="header-section-number">19.6</span> Dynamic UI<a class="anchor" aria-label="anchor" href="#dynamic-ui-1"><i class="fas fa-link"></i></a>
+</h2>
+<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/">shiny</a></span><span class="op">)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="http://purrr.tidyverse.org">purrr</a></span><span class="op">)</span>
+
+<span class="va">filterUI</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/htmlOutput.html">uiOutput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"controls"</span><span class="op">)</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">make_ui</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">id</span>, <span class="va">var</span><span class="op">)</span> <span class="op">{</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">rng</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html">range</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sliderInput.html">sliderInput</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">var</span>, min <span class="op">=</span> <span class="va">rng</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>, max <span class="op">=</span> <span class="va">rng</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>, value <span class="op">=</span> <span class="va">rng</span><span class="op">)</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">is.factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">levs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">var</span>, choices <span class="op">=</span> <span class="va">levs</span>, selected <span class="op">=</span> <span class="va">levs</span>, multiple <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+        <span class="cn">NULL</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+
+<span class="va">filter_var</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">val</span><span class="op">)</span> <span class="op">{</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html">is.na</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="op">&amp;</span> <span class="va">x</span> <span class="op">&gt;=</span> <span class="va">val</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&amp;</span> <span class="va">x</span> <span class="op">&lt;=</span> <span class="va">val</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/factor.html">is.factor</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">x</span> <span class="op"><a href="https://rdrr.io/r/base/match.html">%in%</a></span> <span class="va">val</span>
+    <span class="op">}</span> <span class="kw">else</span> <span class="op">{</span>
+        <span class="co"># No control, so don't filter</span>
+        <span class="cn">TRUE</span>
+    <span class="op">}</span>
+<span class="op">}</span>
+
+<span class="va">filterServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">df</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/stopifnot.html">stopifnot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">is.reactive</a></span><span class="op">(</span><span class="va">df</span><span class="op">)</span><span class="op">)</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">vars</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Fdist.html">df</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+        <span class="va">output</span><span class="op">$</span><span class="va">controls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderUI.html">renderUI</a></span><span class="op">(</span><span class="op">{</span>
+            <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="fu">make_ui</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Fdist.html">df</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">var</span><span class="op">]</span><span class="op">]</span>, <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">var</span><span class="op">)</span>, <span class="va">var</span><span class="op">)</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="op">{</span>
+            <span class="va">each_var</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html">map</a></span><span class="op">(</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/vars.html">vars</a></span><span class="op">(</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">var</span><span class="op">)</span> <span class="fu">filter_var</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Fdist.html">df</a></span><span class="op">(</span><span class="op">)</span><span class="op">[[</span><span class="va">var</span><span class="op">]</span><span class="op">]</span>, <span class="va">input</span><span class="op">[[</span><span class="va">var</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>
+            <span class="fu"><a href="https://purrr.tidyverse.org/reference/reduce.html">reduce</a></span><span class="op">(</span><span class="va">each_var</span>, <span class="va">`&amp;`</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetInput</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span>, <span class="va">filter</span> <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/ls.html">ls</a></span><span class="op">(</span><span class="st">"package:datasets"</span><span class="op">)</span>
+    <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html">is.null</a></span><span class="op">(</span><span class="va">filter</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">lapply</a></span><span class="op">(</span><span class="va">names</span>, <span class="va">get</span>, <span class="st">"package:datasets"</span><span class="op">)</span>
+        <span class="va">names</span> <span class="op">&lt;-</span> <span class="va">names</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html">vapply</a></span><span class="op">(</span><span class="va">data</span>, <span class="va">filter</span>, <span class="fu"><a href="https://rdrr.io/r/base/logical.html">logical</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">]</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/selectInput.html">selectInput</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/NS.html">NS</a></span><span class="op">(</span><span class="va">id</span>, <span class="st">"dataset"</span><span class="op">)</span>, <span class="st">"Pick a dataset"</span>, choices <span class="op">=</span> <span class="va">names</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">datasetServer</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">id</span><span class="op">)</span> <span class="op">{</span>
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/moduleServer.html">moduleServer</a></span><span class="op">(</span><span class="va">id</span>, <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html">reactive</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/get.html">get</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">dataset</span>, <span class="st">"package:datasets"</span><span class="op">)</span><span class="op">)</span>
+    <span class="op">}</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="va">filterApp</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="op">{</span>
+    <span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html">fluidPage</a></span><span class="op">(</span>
+        <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarLayout</a></span><span class="op">(</span>
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">sidebarPanel</a></span><span class="op">(</span>
+                <span class="fu">datasetInput</span><span class="op">(</span><span class="st">"data"</span>, <span class="va">is.data.frame</span><span class="op">)</span>,
+                <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html">textOutput</a></span><span class="op">(</span><span class="st">"n"</span><span class="op">)</span>,
+                <span class="fu">filterUI</span><span class="op">(</span><span class="st">"filter"</span><span class="op">)</span>
+            <span class="op">)</span>,
+            <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/sidebarLayout.html">mainPanel</a></span><span class="op">(</span>
+                <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">tableOutput</a></span><span class="op">(</span><span class="st">"table"</span><span class="op">)</span>
+            <span class="op">)</span>
+        <span class="op">)</span>
+    <span class="op">)</span>
+
+    <span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span>
+        <span class="va">df</span> <span class="op">&lt;-</span> <span class="fu">datasetServer</span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>
+        <span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu">filterServer</span><span class="op">(</span><span class="st">"filter"</span>, <span class="va">df</span><span class="op">)</span>
+
+        <span class="va">output</span><span class="op">$</span><span class="va">table</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderTable.html">renderTable</a></span><span class="op">(</span><span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/r/stats/Fdist.html">df</a></span><span class="op">(</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">)</span>, , drop <span class="op">=</span> <span class="cn">FALSE</span><span class="op">]</span>
+        <span class="op">}</span><span class="op">)</span>
+
+        <span class="va">output</span><span class="op">$</span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html">renderText</a></span><span class="op">(</span><span class="op">{</span>
+            <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste0</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span>, <span class="st">" rows"</span><span class="op">)</span>
+        <span class="op">}</span><span class="op">)</span>
+    <span class="op">}</span>
+
+    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span>
+<span class="op">}</span>
+
+<span class="fu">filterApp</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="functions.html"><span class="header-section-number">18</span> Functions</a></div>
+<div class="next"><a href="packages.html"><span class="header-section-number">20</span> Packages</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#shiny-modules"><span class="header-section-number">19</span> Shiny modules</a></li>
+<li>
+<a class="nav-link" href="#module-basics"><span class="header-section-number">19.1</span> Module basics</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#module-ui"><span class="header-section-number">19.1.1</span> module UI</a></li>
+<li><a class="nav-link" href="#module-server"><span class="header-section-number">19.1.2</span> module server</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#module-server-inputs-and-outputs"><span class="header-section-number">19.2</span> module server inputs and outputs</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#add-variable-selection"><span class="header-section-number">19.2.1</span> Add variable selection</a></li></ul>
+</li>
+<li>
+<a class="nav-link" href="#server-inputs"><span class="header-section-number">19.3</span> Server inputs</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#updated-version-of-selectvarserver"><span class="header-section-number">19.3.1</span> updated version of selectVarServer()</a></li>
+<li><a class="nav-link" href="#modules-inside-of-modules"><span class="header-section-number">19.3.2</span> Modules inside of modules</a></li>
+<li><a class="nav-link" href="#histgoram-example"><span class="header-section-number">19.3.3</span> histgoram example</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#limited-selection-other"><span class="header-section-number">19.4</span> limited selection + other</a></li>
+<li><a class="nav-link" href="#wizard"><span class="header-section-number">19.5</span> Wizard</a></li>
+<li><a class="nav-link" href="#dynamic-ui-1"><span class="header-section-number">19.6</span> Dynamic UI</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+<li><a id="book-source" href="https://github.com/ifendo/mastering-shiny-with-examples/blob/master/19-shiny-modules.Rmd">View source <i class="fab fa-github"></i></a></li>
+          <li><a id="book-edit" href="https://github.com/ifendo/mastering-shiny-with-examples/edit/master/19-shiny-modules.Rmd">Edit this page <i class="fab fa-github"></i></a></li>
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>"<strong>Mastering Shiny with Examples</strong>" was written by Jie Wang. It was last built on 2022-05-28.</p>
+  </div>
+
+  <div class="col-12 col-md-6 mt-3">
+    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
+  </div>
+
+</div></div>
+</footer>
+</body>
+</html>
