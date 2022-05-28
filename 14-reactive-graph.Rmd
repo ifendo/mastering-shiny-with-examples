@@ -1,6 +1,9 @@
 # The reactive graph
 
 ## Introduction
+Reactive inputs and expressoins are collectively called reactive producers;
+
+Reactive expressoins and outputs are reactive consumers 
 
 ```{r, eval=FALSE}
 library(shiny)
@@ -18,7 +21,7 @@ server <- function(input, output, session) {
   rng <- reactive(input$a * 2)
   smp <- reactive(sample(rng(), input$b, replace = TRUE))
   bc <- reactive(input$b * input$c)
-  
+
   output$x <- renderPlot(hist(smp()))
   output$y <- renderTable(max(smp()))
   output$z <- renderText(bc())
@@ -50,7 +53,7 @@ server <- function(input, output, session) {
     } else {
       input$b
     }
-  }) 
+  })
 }
 
 shinyApp(ui, server)

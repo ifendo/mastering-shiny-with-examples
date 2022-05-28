@@ -8,27 +8,53 @@ We can combine `reactiveValues()` and `observe()`/`observeEvent()` to connect th
 library(shiny)
 
 ui <- fluidPage(
-  textInput('nm', 'name'),
-  actionButton('clr', 'Clear'),
-  textOutput('hi')
+  textInput("nm", "name"),
+  actionButton("clr", "Clear"),
+  textOutput("hi")
 )
 
 server <- function(input, output, session) {
-  output$hi <- renderText(paste0('hi ', input$nm))
+  output$hi <- renderText(paste0("hi ", input$nm))
 
   observeEvent(input$clr, {
-    updateTextInput(session, 'nm', value='')
+    updateTextInput(session, "nm", value = "")
   })
 }
 
 shinyApp(ui, server)
 ```
+
+## What doesn't the reactive graph capture?
+
+```{r, eval=FALSE}
+library(shiny)
+
+ui <- fluidPage(
+  textInput("nm", "name"),
+  actionButton("clr", "Clear"),
+  textOutput("hi")
+)
+
+server <- function(input, output, session) {
+  hi <- reactive(paste0("Hi ", input$nm))
+
+  output$hi <- renderText(hi())
+
+  observeEvent(input$clr, {
+    updateTextInput(session, "nm", value = "")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
 ## Case studies
 
 ### One output modified by multiple inputs 
 
 :::{.rmdimportant}
-reactiveValues()
+combine `reactiveValues()` and `observeEvent()` or `observe()` to solve problems that are otherwise very challenging
 :::
 
 ```{r, eval=FALSE}
@@ -69,7 +95,7 @@ server <- function(input, output, session) {
   observeEvent(input$down, {
     r$n <- r$n - 1
   })
-  
+
   output$n <- renderText(r$n)
 }
 
@@ -92,14 +118,14 @@ server <- function(input, output, session) {
     r$names <- c(input$name, r$names)
     updateTextInput(session, "name", value = "")
   })
-  
+
   output$names <- renderText(r$names)
 }
 
 shinyApp(ui, server)
 ```
 
-### Deleting inputs
+#### updated version: Deleting inputs
 
 ```{r, eval=FALSE}
 library(shiny)
@@ -116,12 +142,12 @@ server <- function(input, output, session) {
     r$names <- union(r$names, input$name)
     updateTextInput(session, "name", value = "")
   })
-  
+
   observeEvent(input$del, {
     r$names <- setdiff(r$names, input$name)
     updateTextInput(session, "name", value = "")
   })
-  
+
   output$names <- renderText(r$names)
 }
 
@@ -147,7 +173,7 @@ server <- function(input, output, session) {
   observeEvent(input$stop, {
     r$running <- FALSE
   })
-  
+
   observe({
     if (r$running) {
       r$n <- isolate(r$n) + 1
@@ -174,17 +200,17 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  r <- reactiveValues(fun="")
+  r <- reactiveValues(fun = "")
 
   observeEvent(input$rnorm, {
-    r$fun <- 'rnorm'
+    r$fun <- "rnorm"
   })
   observeEvent(input$runif, {
-    r$fun <- 'runif'
+    r$fun <- "runif"
   })
 
   observe(print(r$fun))
-  
+
   output$plot <- renderPlot({
     req(r$fun)
     hist(get(r$fun)(100))
@@ -205,15 +231,16 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  r <- reactiveValues(fun="rnorm")
+  r <- reactiveValues(fun = "rnorm")
 
   observeEvent(input$go, {
-    if (input$type == 'Normal') r$fun <- 'rnorm'
-    else if (input$type == 'Uniform') r$fun <- 'runif'
+    if (input$type == "Normal") {
+      r$fun <- "rnorm"
+    } else if (input$type == "Uniform") r$fun <- "runif"
   })
 
   observe(print(r$fun))
-  
+
   output$plot <- renderPlot({
     req(input$go)
     hist(get(r$fun)(100))
@@ -236,14 +263,15 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   r <- eventReactive(input$go, {
-    if (input$type == 'Normal') 'rnorm'
-    else if (input$type == 'Uniform') 'runif'
+    if (input$type == "Normal") {
+      "rnorm"
+    } else if (input$type == "Uniform") "runif"
   })
 
   # observeEvent(input$go, {
-    output$plot <- renderPlot({
-      hist(get(r())(100))
-    })
+  output$plot <- renderPlot({
+    hist(get(r())(100))
+  })
   # })
 }
 

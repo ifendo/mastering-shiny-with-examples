@@ -185,7 +185,7 @@ shinyApp(ui, server)
 ```
 
 :::{.rmdnote}
-`freezeReactiveValue` ensures that any reactives or outputs that use the input won't be 
+`freezeReactiveValue()` ensures that any reactives or outputs that use the input won't be 
 updated until the next full round of invalidation
 :::
 

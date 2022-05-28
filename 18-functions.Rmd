@@ -5,6 +5,8 @@
 Functions are a powerful tool to reduce duplication in your UI code.
 
 ```{r, eval=FALSE}
+library(shiny)
+
 sliderInput01 <- function(id) {
     sliderInput(id, label = id, min = 0, max = 1, value = 0.5, step = 0.1)
 }
@@ -22,12 +24,15 @@ ui <- fluidRow(
 ```{r}
 library(purrr)
 library(shiny)
+
 vars <- c("alpha", "beta", "gamma", "delta")
 
 sliderInput01 <- function(id) {
     sliderInput(id, label = id, min = 0, max = 1, value = 0.5, step = 0.1)
 }
+
 sliders <- map(vars, sliderInput01)
+
 ui <- fluidRow(sliders)
 ```
 
